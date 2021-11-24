@@ -118,12 +118,13 @@ async def av(ctx, user:discord.Member=None):
         user=ctx.author
     if user.avatar:
         if not ".webp" in user.avatar_url:
-            img=Image.open(BytesIO(requests.get(user.avatar_url).content))
+            img=Image.open(io.BytesIO(requests.get(user.avatar_url).content))
         else:
-            img=Image.open(BytesIO(requests.get(user.avatar_url.replace('.webp', '.png').content))
-        await ctx.channel.send(file=discord.File(img))
-
-
+            img=Image.open(io.BytesIO(requests.get(user.avatar_url.replace('.webp', '.png').content))
+        try:
+            await ctx.channel.send(file=discord.File(img))
+        except Exception as e:
+            print(user.avatar_url.replace('.webp', '.png'))
     else:
         await ctx.channel.send("User has no avatar")
     
@@ -145,14 +146,6 @@ async def copy(ctx):
                         await x.create_text_channel(f"{chann}")
             for roles in ctx.guild.roles:
                 await g.create_role(name=roles.name, colour=roles.colour, permissions=roles.permissions)
-            for channel in ctx.guild.channels:
-                ch=discord.utils.get(g.channels,name=channel.name)
-                for role in ctx.guild.roles:
-                    try:
-                        nr=discord.utils.get(g.roles, name=role.name)
-                        await ch.set_permissions(nr, overwrite=channel.permissions_for(role))
-                    except Exception as e:
-                       print(e)
     try:
         await g.edit(icon=requests.get(ctx.guild.icon_url).content)
     except Exception:
@@ -187,7 +180,7 @@ async def embed(ctx, *, description):
     try:
         await ctx.send(embed=embed)
     except Exception:
-        await ctx.channel.send("I don't have permission to send embeds in this channel")
+        await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
     
 @Blank.command(aliases=["distort"])
 async def magik(ctx, user: discord.Member = None):
