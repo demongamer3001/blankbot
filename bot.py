@@ -131,8 +131,9 @@ async def av(ctx, user:discord.Member=None):
             await user.avatar_url_as(format="png").save("avatar.png")
             try:
                 await ctx.channel.send(file=discord.File('avatar.png'))
-            except Exception:
+            except Exception as e:
                 await ctx.channel.send(user.avatar_url_as(format="png"))
+                print(e)
             os.remove('avatar.png')
     
 @Blank.command(aliases=["copyguild", "copyserver"])
