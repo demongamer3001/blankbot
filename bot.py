@@ -1,3 +1,4 @@
+#pylint:disable=E1102
 from termcolor import colored
 from datetime import datetime
 dt = datetime.now()
@@ -41,7 +42,7 @@ def Clear():
         keep_alive()
     else:
         keep_alive()
-        os.system('clear')   
+        os.system('clear')
         
 @tasks.loop(minutes=5)
 async def change_activity():
@@ -60,9 +61,9 @@ async def change_activity():
     elif activity=="p":
         activity=discord.Game(name=random.choice(activity_p))
     elif activity=="w":
-        activity=discord.ActivityType.watching(name=random.choice(activity_w))
+        activity=discord.Activity(type=discord.ActivityType.watching(name=random.choice(activity_w)))
     else:
-        activity=discord.ActivityType.listening(name=random.choice(activity_l))
+        activity=discord.Activity(type=discord.ActivityType.listening(name=random.choice(activity_l)))
     await Blank.change_presence(activity=activity)
 
 @Blank.event
