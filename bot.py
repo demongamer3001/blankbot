@@ -120,7 +120,7 @@ async def av(ctx, user:discord.Member=None):
     if not user.avatar:
         await ctx.channel.send("User does not has any avatar")
     else:
-        avatar_content=requests.get(str(user.avatar_url).replace('.webp', '.png')).read()
+        avatar_content=requests.get(str(user.avatar_url).replace('.webp', '.png')).content()
         image=io.BytesIO(avatar_content)
         try:
             await ctx.channel.send(file=discord.File(image))
