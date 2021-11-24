@@ -9,7 +9,6 @@ import urllib.request
 from bs4 import BeautifulSoup as bs4
 import aiohttp
 import discord
-import base64
 from animec import *
 import json
 from discord.ext import commands
