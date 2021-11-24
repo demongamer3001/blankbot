@@ -52,13 +52,14 @@ def Clear():
 async def change_activity():
     activity=random.choice(activity_list)
     if activity=="s":
-        await client.change_presence(activity=discord.Streaming(name=random.choice(activity_s)))
+        activity=discord.Streaming(name=random.choice(activity_s))
     elif activity=="p":
-        await client.change_presence(activity=discord.Game(name=random.choice(activity_s)))
+        activity=discord.Game(name={random.choice(activity_s)})
     elif activity=="w":
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching(name=random.choice(activity_w))))
+        activity=discord.Activity(type=discord.ActivityType.watching(name=random.choice(activity_w)}))
     else:
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening(name=random.choice(activity_l))))
+        activity=discord.Activity(type=discord.ActivityType.listening(name=random.choice(activity_l)))
+    await client.change_presence(activity=activity)
 
 @Blank.event
 async def on_ready():
