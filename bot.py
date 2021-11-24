@@ -115,19 +115,15 @@ async def quickdelete(ctx, *, args):
 async def av(ctx, user:discord.Member=None):
     await ctx.message.delete()
     if user is None:
-        user=Blank.user
+        user=ctx.author
     if user.avatar:
-        avatar_url = str(user.avatar_url_as(format="png"))
-        r=requests.get(avatar_url)
-        if r.status_code==200:
-            async with session.get(avatar_url) as resp:
-                    try:
-                        image = await resp.read()
-                        with io.BytesIO(image) as file:
-                            await ctx.send(file=discord.File(file, f"avatar.png"))
-                    except:
-                        await ctx.send(resp)
-            
+        if not ".webp" in user.avatar_url:
+            img=Image.open(BytesIO(requests.get(user.avatar_url).content))
+        else:
+            img=Image.open(BytesIO(requests.get(user.avatar_url.replace('.webp', '.png').content))
+        await ctx.channel.send(file=discord.File(img))
+
+
     else:
         await ctx.channel.send("User has no avatar")
     
