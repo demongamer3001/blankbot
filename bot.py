@@ -54,9 +54,9 @@ async def change_activity():
     if activity=="s":
         activity=discord.Streaming(name=random.choice(activity_s))
     elif activity=="p":
-        activity=discord.Game(name={random.choice(activity_s)})
+        activity=discord.Game(name=random.choice(activity_s))
     elif activity=="w":
-        activity=discord.Activity(type=discord.ActivityType.watching(name=random.choice(activity_w)}))
+        activity=discord.Activity(type=discord.ActivityType.watching(name=random.choice(activity_w)))
     else:
         activity=discord.Activity(type=discord.ActivityType.listening(name=random.choice(activity_l)))
     await client.change_presence(activity=activity)
