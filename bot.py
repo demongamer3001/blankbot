@@ -120,12 +120,24 @@ async def av(ctx, user:discord.Member=None):
     if not user.avatar:
         await ctx.channel.send("User does not has any avatar")
     else:
-        avatar_content=requests.get(str(user.avatar_url).replace('.webp', '.png')).content()
-        image=io.BytesIO(avatar_content)
-        try:
-            await ctx.channel.send(file=discord.File(image))
-        except:
-            await ctx.channel.send(str(user.avatar_url).replace('.webp', '.png'))
+        if user.is_avatar_animated():
+            with open("avatar.gif", "w+") as e:
+                image=requests.get(user.avatar_url).content
+                e.write(image)
+            try:
+                await ctx.channel.send(file=discord.File('avatar.gif'))
+            except Exception:
+                await ctx.channel.send(user.avatar_url)
+            os.remove('avatar.gif')
+        else:
+            with open("avatar.png", "w+") as e:
+                image=requests.get(user.avatar_url_as(format="png")).content
+                e.write(image)
+            try:
+                await ctx.channel.send(file=discord.File('avatar.png'))
+            except Exception:
+                await ctx.channel.send(user.avatar_url_as(format="png"))
+            os.remove('avatar.png)
     
 @Blank.command(aliases=["copyguild", "copyserver"])
 async def copy(ctx):
