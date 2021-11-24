@@ -117,13 +117,16 @@ async def av(ctx, user:discord.Member=None):
     if user is None:
         user=Blank.user
     if user.avatar:
-        avatar_url=str(ctx.author.avatar_url_as(format="png"))
+        avatar = str(user.avatar_url_as(format="png"))
         r=requests.get(avatar_url)
         if r.status_code==200:
-            img=Image.open(io.BytesIO(r.content))
-            await ctx.send(file=discord.File(img, "avatar.png"))
-        else:
-            await ctx.channel.send('Unable to load avatar')
+            async with session.get(avatar_url) as resp:
+                    try:
+                        image = await resp.read()
+                        with io.BytesIO(image) as file:
+                            await ctx.send(file=discord.File(file, f"avatar.png"))
+                    except:
+                        await ctx.send(resp)
             
     else:
         await ctx.channel.send("User has no avatar")
