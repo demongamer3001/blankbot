@@ -1,4 +1,6 @@
 import Blank
+import os
+import requests
 from termcolor import colored
 from datetime import datetime
 dt = datetime.now()
