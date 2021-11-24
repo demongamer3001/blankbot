@@ -36,6 +36,7 @@ activity_s=['Earth', 'Mars', 'Jupiter', 'Mercury', 'Venus', 'Saturn', 'Neptune',
 activity_p=['Minecraft', 'with Blank', 'Squid Games', 'Do or Die', 'Curse of Aros', 'with Satan', 'with anime girls']
 activity_w=['over you!', 'Animes', 'Plants', 'Animals', 'Blank', 'Nothing!']
 activity_l=['Youtube Music', 'Blank', ['Dead Groovy', 'Dead Rythm', 'Death']
+
 prefix="x"
 Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
 Blank.remove_command('help')
