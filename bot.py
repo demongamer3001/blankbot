@@ -49,20 +49,20 @@ async def change_activity():
     
     activity_list=['s', 'p', 'w', 'l']
     activity_s=['Earth', 'Mars', 'Jupiter', 'Mercury', 'Venus', 'Saturn', 'Neptune', 'Uranus']
-    activity_p=['Minecraft', 'with Blank', 'Squid Games', 'Do or Die', 'Curse of Aros', 'with Satan', 'with anime girls']
+    activity_p=['Minecraft', 'with Blank', 'Squid Games', 'Do or Die', 'Curse of Aros', 'with Satan', 'with Python']
     activity_w=['over you!', 'Animes', 'Plants', 'Animals', 'Blank', 'Nothing!']
     activity_l=['Youtube Music', 'Blank', 'Dead Groovy', 'Dead Rythm', 'Death']
     activity=random.choice(activity_list)
     
     
     if activity=="s":
-        activity=discord.Streaming(name=random.choice(activity_s), url="https://replit.com/@BlankMCPE/Blank-Bot")
+        activity=discord.Streaming(name=f'from {random.choice(activity_s)}', url="https://replit.com/@BlankMCPE/Blank-Bot")
     elif activity=="p":
         activity=discord.Game(name=random.choice(activity_p))
     elif activity=="w":
         activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(activity_w))
     else:
-        activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(activity_l))
+        activity=discord.Activity(type=discord.ActivityType.listening, name=f'to {random.choice(activity_l)}')
     await Blank.change_presence(activity=activity)
 
 @Blank.event
