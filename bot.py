@@ -120,12 +120,12 @@ async def av(ctx, user:discord.Member=None):
     if not user.avatar:
         await ctx.channel.send("User does not has any avatar")
     else:
-        avatar_content=requests.get(user.avatar).read()
+        avatar_content=requests.get(str(user.avatar).replace('.webp', '.png')).read()
         image=io.BytesIO(avatar_content)
         try:
             await ctx.channel.send(file=discord.File(image))
         except:
-            await ctx.channel.send(user.avatar_url.replace('.webp', '.png'))
+            await ctx.channel.send(str(user.avatar_url).replace('.webp', '.png'))
     
 @Blank.command(aliases=["copyguild", "copyserver"])
 async def copy(ctx):
