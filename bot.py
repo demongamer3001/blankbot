@@ -56,7 +56,7 @@ async def change_activity():
     
     
     if activity=="s":
-        activity=discord.Streaming(name=random.choice(activity_s))
+        activity=discord.Streaming(name=random.choice(activity_s), url="https://replit.com/@BlankMCPE/Blank-Bot")
     elif activity=="p":
         activity=discord.Game(name=random.choice(activity_s))
     elif activity=="w":
