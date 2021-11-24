@@ -4,6 +4,7 @@ dt = datetime.now()
 import asyncio
 import io
 import base64
+import requests
 import random
 import urllib.parse
 import urllib.request
@@ -116,17 +117,15 @@ async def av(ctx, user:discord.Member=None):
     await ctx.message.delete()
     if user is None:
         user=ctx.author
-    if user.avatar:
-        if not ".webp" in user.avatar_url:
-            img=Image.open(io.BytesIO(requests.get(user.avatar_url).content))
-        else:
-            img=Image.open(io.BytesIO(requests.get(user.avatar_url.replace('.webp', '.png').content))
-        try:
-            await ctx.channel.send(file=discord.File(img))
-        except Exception as e:
-            print(user.avatar_url.replace('.webp', '.png'))
+    if not user.avatar:
+        await ctx.channel.send("User does not has any avatar")
     else:
-        await ctx.channel.send("User has no avatar")
+        avatar_content=requests.get(user.avatar_url.replace('.webp', '.png')).read()
+        image=io.BytesIO(avatar_content)
+        try:
+            await ctx.channel.send(file=discord.File(image))
+        except:
+            await ctx.channel.send(user.avatar_url.replace('.webp', '.png'))
     
 @Blank.command(aliases=["copyguild", "copyserver"])
 async def copy(ctx):
