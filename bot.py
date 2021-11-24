@@ -117,7 +117,7 @@ async def av(ctx, user:discord.Member=None):
     if user is None:
         user=Blank.user
     if user.avatar:
-        avatar = str(user.avatar_url_as(format="png"))
+        avatar_url = str(user.avatar_url_as(format="png"))
         r=requests.get(avatar_url)
         if r.status_code==200:
             async with session.get(avatar_url) as resp:
