@@ -98,7 +98,7 @@ async def help(ctx):
         embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
         await ctx.send(embed=embed)
     except:
-        await ctx.channel.send("I don't have permission to send embeds in this channel")
+        await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
     
 @Blank.command(aliases=["whois"])
 async def userinfo(ctx, member: discord.Member = None):
@@ -113,7 +113,7 @@ async def userinfo(ctx, member: discord.Member = None):
   embed.add_field(name="Display Name:", value=member.display_name)
   acc_age= (datetime.now() - member.created_at).total_seconds()
   if acc_age<3600:
-      acc_age="< 1 hr"
+      acc_age="Less than an hour"
   elif acc_age<86400 and acc_age>=3600:
       acc_age=f"{int(acc_age/3600)} hours"
   elif acc_age>=86400 and acc_age<2592000:
@@ -123,10 +123,12 @@ async def userinfo(ctx, member: discord.Member = None):
   else:
       acc_age=f"{int(acc_age/31104000)} years {int((acc_age%31104000)/2592000)} months {int(((acc_age%31104000)%2592000)/86400)} days"
   embed.add_field(name="Created Account On:", value=f'{member.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")} ({acc_age})')
+  if member is ctx.guild.owner:
+         embed.set_footer(text = "User is owner of this server")
   
   acc_age= (datetime.now() - member.joined_at).total_seconds()
   if acc_age<3600:
-      acc_age="< 1 hr"
+      acc_age="Less than an hour"
   elif acc_age<86400 and acc_age>=3600:
       acc_age=f"{int(acc_age/3600)} hours"
   elif acc_age>=86400 and acc_age<2592000:
@@ -144,7 +146,7 @@ async def userinfo(ctx, member: discord.Member = None):
      try:
         await ctx.send(embed=embed)
      except Exception:
-        await ctx.channel.send("I don't have permission to send embeds in this channel")   
+        await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
        
   else:
      embed.add_field(name="Roles:", value=", ".join([role.mention for role in roles]))
