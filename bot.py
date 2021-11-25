@@ -63,7 +63,7 @@ async def change_activity():
     elif activity=="w":
         activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(activity_w))
     else:
-        activity=discord.Activity(type=discord.ActivityType.listening, name=f'to {random.choice(activity_l)}')
+        activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(activity_l))
     await Blank.change_presence(activity=activity)
 
 @Blank.event
