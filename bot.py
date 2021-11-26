@@ -10,6 +10,7 @@ import urllib.parse
 import urllib.request
 from bs4 import BeautifulSoup as bs4
 import aiohttp
+import typing
 import discord
 from animec import *
 import json
@@ -17,6 +18,16 @@ from discord.ext import commands, tasks
 from PIL import Image
 from flask import Flask
 from threading import Thread
+
+try:
+    with open('config.json') as e:
+        a=json.load(e)
+        random_status=a['random_status']
+except Exception as e:
+    with open('config.json', 'w+') as e:
+        a={}
+        a['random_status']=True
+        json.dump(a, e)
 
 app = Flask('')
 
@@ -44,27 +55,92 @@ def Clear():
         keep_alive()
         os.system('clear')
         
+neko_base="https://nekobot.xyz/api/imagegen?type="
+
+def kannagen_gen(text):
+    endpoint=neko_base+"kannagen&text="+urllib.parse.quote_plus(text)
+    res=(requests.get(endpoint).json()["message"])
+    return res
+    
+def changemymind_gen(text):
+    endpoint=neko_base+"changemymind&text="+urllib.parse.quote_plus(text)
+    res=(requests.get(endpoint).json()["message"])
+    return res
+    
+def phcomment_gen(name, img, text):
+    endpoint=neko_base+"phcomment&username="+urllib.parse.quote_plus(name)+"&image="+img+"&text="+urllib.parse.quote_plus(text)
+    res=(requests.get(endpoint).json()["message"])
+    return res
+    
+def trash_gen(url):
+    endpoint=neko_base+"trash&url="+url
+    res=(requests.get(endpoint).json()["message"])
+    return res
+    
+def stickbug_vid(url):
+    endpoint=neko_base+"stickbug&url="+str(url)
+    res=(requests.get(endpoint).json()["message"])
+    return res
+ 
+def neko_pic():
+    endpoint="https://nekobot.xyz/api/image?type=neko"
+    res=(requests.get(endpoint).json()["message"])
+    return res
+    
+def kanna_pic():
+    endpoint="https://nekobot.xyz/api/image?type=kanna"
+    res=(requests.get(endpoint).json()["message"])
+    return res
+    
+def rand_list(list):
+    return random.choice(list)
+        
+def check_status(url):
+    if requests.get(url).status_code==200:
+        return True
+    else:
+        return False
+    
+def hnsfw_gen():
+    hnsfw_list=["hass", "hmidriff", "hentai", "hneko", "hkitsune", "hanal", "hthigh", "paizuri", "hboobs", "tentacle"]
+    while True:
+        endpoint="https://nekobot.xyz/api/image?type="+random.choice(hnsfw_list)
+        if check_status(endpoint):
+           if not requests.get(endpoint).json()["message"].endswith('.gif'):
+               break
+    res=(requests.get(endpoint).json()["message"])
+    return res
+    
+def nsfw_gen():
+    nsfw_list=["anal", "gonewild", "ass", "pussy", "thigh", "boobs"]
+    while True:
+        endpoint="https://nekobot.xyz/api/image?type="+random.choice(nsfw_list)
+        if check_status(endpoint):
+           if not requests.get(endpoint).json()["message"].endswith('.gif'):
+               break
+    res=(requests.get(endpoint).json()["message"])
+    return res
+        
 @tasks.loop(minutes=5)
 async def change_activity():
+    if random_status:
+        activity_list=['s', 'p', 'w', 'l']
+        activity_s=['Earth', 'Mars', 'Jupiter', 'Mercury', 'Venus', 'Saturn', 'Neptune', 'Uranus']
+        activity_p=['Minecraft', 'with Blank', 'Squid Games', 'Do or Die', 'Curse of Aros', 'with Satan', 'with Python']
+        activity_w=['over you!', 'Animes', 'Plants', 'Animals', 'Blank', 'Nothing!']
+        activity_l=['Youtube Music', 'Blank', 'Dead Groovy', 'Dead Rythm', 'Death']
+        activity=random.choice(activity_list)
     
     
-    activity_list=['s', 'p', 'w', 'l']
-    activity_s=['Earth', 'Mars', 'Jupiter', 'Mercury', 'Venus', 'Saturn', 'Neptune', 'Uranus']
-    activity_p=['Minecraft', 'with Blank', 'Squid Games', 'Do or Die', 'Curse of Aros', 'with Satan', 'with Python']
-    activity_w=['over you!', 'Animes', 'Plants', 'Animals', 'Blank', 'Nothing!']
-    activity_l=['Youtube Music', 'Blank', 'Dead Groovy', 'Dead Rythm', 'Death']
-    activity=random.choice(activity_list)
-    
-    
-    if activity=="s":
-        activity=discord.Streaming(name=f'from {random.choice(activity_s)}', url="https://replit.com/@BlankMCPE/Blank-Bot")
-    elif activity=="p":
-        activity=discord.Game(name=random.choice(activity_p))
-    elif activity=="w":
-        activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(activity_w))
-    else:
-        activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(activity_l))
-    await Blank.change_presence(activity=activity)
+        if activity=="s":
+            activity=discord.Streaming(name=f'from {random.choice(activity_s)}', url="https://replit.com/@BlankMCPE/Blank-Bot")
+        elif activity=="p":
+            activity=discord.Game(name=random.choice(activity_p))
+        elif activity=="w":
+            activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(activity_w))
+        else:
+            activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(activity_l))
+        await Blank.change_presence(activity=activity)
 
 @Blank.event
 async def on_ready():
@@ -74,32 +150,247 @@ async def on_ready():
     change_activity.start()
     
 @Blank.command()
-async def help(ctx):
+async def help(ctx, category=None):
     await ctx.message.delete()
     try:
-        embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random())
-        embed.add_field(name="\uD83E\uDDCA `help`", value="Shows all commands' info", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `embed`", value="Sends embed: "+prefix+"embed <message>", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `empty`", value="Sends an empty character", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `wyr`", value="Sends a would-you-rather question", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `topic`", value="Sends a random chat topic", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `ip`", value="Sends the ip info: "+prefix+"ip <ip>", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `roll`", value="Selects a random number between 2 numbers: "+prefix+"roll <num 1> <num 2>", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `copy`", value="Copy the server", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `avatar`", value="Sends the avatar of user: "+prefix+"avatar [user]", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `magik`", value="Sends distorted avatar of user: "+prefix+"magik [user]", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `deepfry`", value="Sends deepfried avatar of user: "+prefix+"deepfry [user]", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `whois`", value="Sends the user's info: "+prefix+"whois [user]", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `del`", value="Sends a message and instantly deletes it: "+prefix+"del <message>", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `purge`", value="Purge the message: "+prefix+"purge <amount>", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `anime`", value="Sends the info about an anime: "+prefix+"anime <anime name>", inline=False)
-        embed.set_thumbnail(url=Blank.user.avatar_url)
-        embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
-        embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
-        await ctx.send(embed=embed)
-    except:
+        if category==None:
+            embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"""Use `{prefix}help <category>` for more info on a category.""")
+            embed.add_field(name="\uD83E\uDDCA Bot",
+value="`help embed purge del copy ip whois stream play watch listen random_status`", inline=False)
+            embed.add_field(name="\uD83E\uDDCA Fun",
+value="`avatar magik deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll empty`", inline=False)
+            embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
+            embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
+            embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
+            embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
+            await ctx.channel.send(embed=embed)
+        else:
+            if category.lower()=="bot":
+                embed=discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"**__Help - Bot__**")
+                embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
+                embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
+                embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
+                embed.add_field(name=f"{prefix}help [category]", value="`Shows help menu. (If category is given, then shows help menu for the category)`")
+                embed.add_field(name=f"{prefix}embed <text>", value="`Send embed like a bot`")
+                embed.add_field(name=f"{prefix}purge <number of messages>", value="`Deletes the given number of messages sent by you (do not put large number or you will get rate limited)`")
+                embed.add_field(name=f"{prefix}del <text>", value="`Send a message and instantly deletes it (do not use this very frequently or you will get rate limited)`")
+                embed.add_field(name=f"{prefix}copy", value="`Copy the current server (do not make changes to the new server until the server icon is copied)`")
+                embed.add_field(name=f"{prefix}ip <ip address>", value="`Get information of an IP address`")
+                embed.add_field(name=f"{prefix}whois [user]", value="`Send information about a user in the server`")
+                embed.add_field(name=f"{prefix}stream <text>", value="`Set streaming status`")
+                embed.add_field(name=f"{prefix}play <text>", value="`Set playing status`")
+                embed.add_field(name=f"{prefix}watch <text>", value="`Set watching status`")
+                embed.add_field(name=f"{prefix}listen <text>", value="`Set listening status`")
+                embed.add_field(name=f"{prefix}random_status", value="`Turn random statuses on/off`")
+                await ctx.channel.send(embed=embed)
+            elif category.lower()=="fun":
+                embed=discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"**__Help - Fun__**")
+                embed.add_field(name=f"{prefix}avatar [user]", value="`Send the avatar of a user in the server`")
+                embed.add_field(name=f"{prefix}magik [user]", value="`Send the distorted avatar of a user in the server`")
+                embed.add_field(name=f"{prefix}deepfry [user]", value="`Send the deepfried avatar of a user in the server`")
+                embed.add_field(name=f"{prefix}kanna", value="`Send random image of Kanna Kamui`")
+                embed.add_field(name=f"{prefix}neko", value="`Send random image of neko girl`")
+                embed.add_field(name=f"{prefix}anime <anime>", value="`Send info about an anime`")
+                embed.add_field(name=f"{prefix}phcomment [user] <text>", value="`Send fake screenshot of the user's pornhub comment`")
+                embed.add_field(name=f"{prefix}kannagen <text>", value="`Kanna Kamui writes your text in her board`")
+                embed.add_field(name=f"{prefix}changemymind <text>", value="`Generate change my mind meme with the text`")
+                embed.add_field(name=f"{prefix}trash [user]", value="`Convert a user to a trash waifu`")
+                embed.add_field(name=f"{prefix}stickbug [user]", value="`Generate stickbug meme with the user's profile picture (takes some time)`")
+                embed.add_field(name=f"{prefix}wyr", value="`Send a would-you-rather questiom`")
+                embed.add_field(name=f"{prefix}topic", value="`Send a chat topic`")
+                embed.add_field(name=f"{prefix}roll <first number> <last number>", value="`Choose a random number between the first and last number`")
+                embed.add_field(name=f"{prefix}empty", value="`Send an empty message`")
+                embed.add_field(name=f"{prefix}ascii <text>", value="`Send ascii (long text not supported and does not look correctly on mobile devices)`")
+                embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
+                embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
+                embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
+                await ctx.channel.send(embed=embed)
+            elif category.lower()=="nsfw":
+                embed=discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description="**__Help - NSFW__**")
+                embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
+                embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
+                embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
+                embed.add_field(name=f"{prefix}hnsfw", value="`Send hentai NSFW image`")
+                embed.add_field(name=f"{prefix}nsfw", value="`Send NSFW image`")
+                await ctx.channel.send(embed=embed)
+            else:
+                await ctx.channel.send('No category with the name __'+category+'__ found', delete_after=2.0)
+            
+    except Exception:
         await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
+        print(e)
+
+@Blank.command()
+async def stream(ctx, *, text:str=None):
+    if not text == None:
+        await ctx.message.delete()
+        global random_status
+        random_status=False
+        with open('config.json', 'r+') as e:
+            f=e.read()
+            f['random_status']=False
+            json.dump(f, e)
+        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"))
+        
+@Blank.command(aliases=["kg", "kw", "kr"])
+async def kannagen(ctx, *, text:str):
+    await ctx.message.delete()
+    url=kannagen_gen(text)
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'kanna.png'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command(aliases=["cmm"])
+async def changemymind(ctx, *, text:str):
+    await ctx.message.delete()
+    url=changemymind_gen(text)
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'cmm.png'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def hnsfw(ctx):
+    await ctx.message.delete()
+    url=hnsfw_gen()
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'hnsfw.png'))
+    except Exception:
+        await ctx.channel.send(url)
+        
+@Blank.command()
+async def nsfw(ctx):
+    await ctx.message.delete()
+    url=nsfw_gen()
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'nsfw.png'))
+    except Exception:
+        await ctx.channel.send(url)
+        
+@Blank.command(aliases=["phc"])
+async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
+    await ctx.message.delete()
+    if text is None:
+        text="I like it very much"
+    if type(user)==str:
+        text=f"{user} {text}"
+        user=ctx.message.author
+    name=user.display_name
+    image=str(user.avatar_url_as(format="png"))
+    url=phcomment_gen(name, image, text)
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'ph.png'))
+    except Exception:
+        await ctx.channel.send(url)
     
+@Blank.command()
+async def play(ctx, *, text=None):
+    if not text == None:
+        await ctx.message.delete()
+        global random_status
+        random_status=False
+        with open('config.json', 'r+') as e:
+            f=e.read()
+            f['random_status']=False
+            json.dump(f, e)
+        await Blank.change_presence(activity=discord.Game(name=text))
+
+@Blank.command()
+async def watch(ctx, *, text=None):
+    if not text == None:
+        await ctx.message.delete()
+        global random_status
+        random_status=False
+        with open('config.json', 'r+') as e:
+            f=e.read()
+            f['random_status']=False
+            json.dump(f, e)
+        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=text))
+
+@Blank.command()
+async def listen(ctx, *, text=None):
+    if not text == None:
+        await ctx.message.delete()
+        global random_status
+        random_status=False
+        with open('config.json', 'r+') as e:
+            f=e.read()
+            f['random_status']=False
+            json.dump(f, e)
+        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=text))
+        
+@Blank.command(aliases=["rs"])
+async def random_status(ctx):
+    await ctx.message.delete()
+    global random_status
+    if not random_status:
+        random_status=True
+        with open('config.json', 'r+') as e:
+            f=e.read()
+            f['random_status']=True
+            json.dump(f, e)
+        await ctx.channel.send("Random statuses are now turned on", delete_after=2.0)
+        await change_activity()
+    else:
+        random_status=False
+        with open('config.json', 'r+') as e:
+            f=e.read()
+            f['random_status']=False
+            json.dump(f, e)
+        await Blank.change_presence(activity=None)
+        await ctx.channel.send("Random statuses are now turned off", delete_after=2.0)
+        
+@Blank.command()
+async def kanna(ctx):
+    await ctx.message.delete()
+    url=kanna_pic()
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'kanna.png'))
+    except Exception:
+        await ctx.channel.send(url)
+        
+@Blank.command()
+async def neko(ctx):
+    await ctx.message.delete()
+    url=neko_pic()
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'neko.png'))
+    except Exception:
+        await ctx.channel.send(url)
+        
+@Blank.command()
+async def trash(ctx, user:discord.Member=None):
+    await ctx.message.delete()
+    if user is None:
+        user=ctx.message.author
+    url=trash_gen(str(user.avatar_url_as(format="png")))
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'trash.png'))
+    except Exception:
+        await ctx.channel.send(url)
+    
+@Blank.command(aliases=["sb", "stb"])
+async def stickbug(ctx, user: discord.Member=None):
+    await ctx.message.delete()
+    await ctx.channel.send("It will take a little bit of time")
+    if user is None:
+        user=ctx.message.author
+    url=stickbug_vid(user.avatar_url_as(format="png"))
+    try:
+        file=io.BytesIO(requests.get(url).content)
+        await ctx.channel.send(file=discord.File(file, 'stickbug.mp4'))
+    except Exception:
+        await ctx.channel.send(url)
+
 @Blank.command(aliases=["whois"])
 async def userinfo(ctx, member: discord.Member = None):
   await ctx.message.delete()
@@ -122,9 +413,7 @@ async def userinfo(ctx, member: discord.Member = None):
       acc_age=f"{int(acc_age/2592000)} months {int((acc_age%2592000)/86400)} days"
   else:
       acc_age=f"{int(acc_age/31104000)} years {int((acc_age%31104000)/2592000)} months {int(((acc_age%31104000)%2592000)/86400)} days"
-  embed.add_field(name="Created Account On:", value=f'{member.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")} ({acc_age})')
-  if member is ctx.guild.owner:
-         embed.set_footer(text = "User is owner of this server")
+  embed.add_field(name="Created Account On:", value=f'{member.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")} *({acc_age})*')
   
   acc_age= (datetime.now() - member.joined_at).total_seconds()
   if acc_age<3600:
@@ -138,7 +427,7 @@ async def userinfo(ctx, member: discord.Member = None):
   else:
       acc_age=f"{int(acc_age/31104000)} years {int((acc_age%31104000)/2592000)} months {int(((acc_age%31104000)%2592000)/86400)} days"
   
-  embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %d %B %Y, %I:%M %p UTC")+f" ({acc_age})")
+  embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %d %B %Y, %I:%M %p UTC")+f" *({acc_age})*")
     
   if roles == []:
      embed.add_field(name="Roles:", value="None")
@@ -165,7 +454,7 @@ async def quickdelete(ctx, *, args):
 async def av(ctx, user:discord.Member=None):
     await ctx.message.delete()
     if user is None:
-        user=ctx.author
+        user=ctx.message.author
     if not user.avatar:
         await ctx.channel.send("User does not has any avatar")
     else:
@@ -180,9 +469,8 @@ async def av(ctx, user:discord.Member=None):
             await user.avatar_url_as(format="png").save("avatar.png")
             try:
                 await ctx.channel.send(file=discord.File('avatar.png'))
-            except Exception as e:
+            except Exception:
                 await ctx.channel.send(user.avatar_url_as(format="png"))
-                print(e)
             os.remove('avatar.png')
     
 @Blank.command(aliases=["copyguild", "copyserver"])
@@ -244,7 +532,7 @@ async def magik(ctx, user: discord.Member = None):
     await ctx.message.delete()
     endpoint = "https://nekobot.xyz/api/imagegen?type=magik&intensity=3&image="
     if user is None:
-        avatar = str(ctx.author.avatar_url_as(format="png"))
+        avatar = str(ctx.message.author.avatar_url_as(format="png"))
         endpoint += avatar
         r = requests.get(endpoint)
         res = r.json()
@@ -275,7 +563,7 @@ async def deepfry(ctx, user: discord.Member = None):
     await ctx.message.delete()
     endpoint = "https://nekobot.xyz/api/imagegen?type=deepfry&image="
     if user is None:
-        avatar = str(ctx.author.avatar_url_as(format="png"))
+        avatar = str(ctx.message.author.avatar_url_as(format="png"))
         endpoint += avatar
         r = requests.get(endpoint)
         res = r.json()
@@ -326,35 +614,39 @@ async def topic(ctx):
     await ctx.send("```\n"+topic+"```")            
             
 @Blank.command(aliases=['geolocate', 'iptogeo', 'iptolocation', 'ip2geo', 'ip'])
-async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
-    await ctx.message.delete()
-    temp = requests.get(f'http://ip-api.com/json/{ipaddr}?fields=26961913').text.replace('""', '"(No info)"')
-    geo=json.loads(temp)
-    
-    if geo['status']=='success':
-        try:
-            em=discord.Embed(title='__IP Tracker__', colour=discord.Colour.random())
-            em.add_field(name="`IP Address`", value=f"**`{geo['query']}`**", inline=False)
-            em.add_field(name="`Continent`", value=f"**`{geo['continent']}`**", inline=False)
-            em.add_field(name="`Country`", value=f"**`{geo['country']}`**", inline=False)
-            em.add_field(name="`Region`", value=f"**`{geo['regionName']}`**", inline=False)
-            em.add_field(name="`City`", value=f"**`{geo['city']}`**", inline=False)
-            em.add_field(name="`District`", value=f"**`{geo['district']}`**", inline=False)
-            em.add_field(name="`ZIP Code`", value=f"**`{geo['zip']}`**", inline=False)
-            em.add_field(name="`Latitude`", value=f"**`{geo['lat']}`**", inline=False)
-            em.add_field(name="`Longitude`", value=f"**`{geo['lon']}`**", inline=False)
-            em.add_field(name="`Time Zone`", value=f"**`{geo['timezone']}`**", inline=False)
-            em.add_field(name="`Currency`", value=f"**`{geo['currency']}`**", inline=False)
-            em.add_field(name="`ISP`", value=f"**`{geo['isp']}`**", inline=False)
-            em.add_field(name="`Organisation`", value=f"**`{geo['org']}`**", inline=False)
-            em.add_field(name="`Mobile Network`", value=f"**`{geo['mobile']}`**", inline=False)
-            em.add_field(name="`Hosting`", value=f"**`{geo['hosting']}`**", inline=False)
-            em.add_field(name="`Proxy`", value=f"**`{geo['proxy']}`**", inline=False)
-            await ctx.channel.send(embed=em)
-        except Exception:
-            await ctx.channel.send(f"```\nIP Tracker\n\nIP Address: {geo['query']}\nContinent: {geo['continent']}\nCountry: {geo['country']}\nRegion: {geo['regionName']}\nCity: {geo['city']}\nDistrict: {geo['district']}\nZIP Code: {geo['zip']}\nLatitude: {geo['lat']}\nLongitude: {geo['lon']}\nTime Zone: {geo['timezone']}\nCurrency: {geo['currency']}\nISP: {geo['isp']}\nOrganisation: {geo['isp']}\nMobile Data: {geo['mobile']}\n Hosting: {geo['hosting']}\nProxy: {geo['proxy']}```")
+async def geoip(ctx, *, ipaddr: str=None):
+    if ipaddr is None:
+        await ctx.message.delete()
+        await ctx.channel.send("You have to enter IP address too")
     else:
-        await ctx.channel.send("Invalid IP Address")
+        await ctx.message.delete()
+        temp = requests.get(f'http://ip-api.com/json/{ipaddr}?fields=26961913').text.replace('""', '"(No info)"')
+        geo=json.loads(temp)
+    
+        if geo['status']=='success':
+            try:
+                em=discord.Embed(title='__IP Tracker__', colour=discord.Colour.random())
+                em.add_field(name="`IP Address`", value=f"**`{geo['query']}`**", inline=False)
+                em.add_field(name="`Continent`", value=f"**`{geo['continent']}`**", inline=False)
+                em.add_field(name="`Country`", value=f"**`{geo['country']}`**", inline=False)
+                em.add_field(name="`Region`", value=f"**`{geo['regionName']}`**", inline=False)
+                em.add_field(name="`City`", value=f"**`{geo['city']}`**", inline=False)
+                em.add_field(name="`District`", value=f"**`{geo['district']}`**", inline=False)
+                em.add_field(name="`ZIP Code`", value=f"**`{geo['zip']}`**", inline=False)
+                em.add_field(name="`Latitude`", value=f"**`{geo['lat']}`**", inline=False)
+                em.add_field(name="`Longitude`", value=f"**`{geo['lon']}`**", inline=False)
+                em.add_field(name="`Time Zone`", value=f"**`{geo['timezone']}`**", inline=False)
+                em.add_field(name="`Currency`", value=f"**`{geo['currency']}`**", inline=False)
+                em.add_field(name="`ISP`", value=f"**`{geo['isp']}`**", inline=False)
+                em.add_field(name="`Organisation`", value=f"**`{geo['org']}`**", inline=False)
+                em.add_field(name="`Mobile Network`", value=f"**`{geo['mobile']}`**", inline=False)
+                em.add_field(name="`Hosting`", value=f"**`{geo['hosting']}`**", inline=False)
+                em.add_field(name="`Proxy`", value=f"**`{geo['proxy']}`**", inline=False)
+                await ctx.channel.send(embed=em)
+            except Exception:
+                await ctx.channel.send(f"```\nIP Tracker\n\nIP Address: {geo['query']}\nContinent: {geo['continent']}\nCountry: {geo['country']}\nRegion: {geo['regionName']}\nCity: {geo['city']}\nDistrict: {geo['district']}\nZIP Code: {geo['zip']}\nLatitude: {geo['lat']}\nLongitude: {geo['lon']}\nTime Zone: {geo['timezone']}\nCurrency: {geo['currency']}\nISP: {geo['isp']}\nOrganisation: {geo['isp']}\nMobile Data: {geo['mobile']}\n Hosting: {geo['hosting']}\nProxy: {geo['proxy']}```")
+        else:
+            await ctx.channel.send("Invalid IP Address")
 
 @Blank.command()
 async def anime(ctx, *, anime):
