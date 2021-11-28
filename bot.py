@@ -78,10 +78,9 @@ def trash_gen(url):
     res=(requests.get(endpoint).json()["message"])
     return res
     
-def stickbug_vid(url):
+def stickbug_vid(url, link):
     endpoint=neko_base+"stickbug&url="+str(url)
-    res=(requests.get(endpoint).json()["message"])
-    return res
+    link[0]=(requests.get(endpoint).json()["message"])
  
 def neko_pic():
     endpoint="https://nekobot.xyz/api/image?type=neko"
@@ -386,9 +385,11 @@ async def stickbug(ctx, user: discord.Member=None):
     await ctx.channel.send("It will take a little bit of time")
     if user is None:
         user=ctx.message.author
-    url=stickbug_vid(user.avatar_url_as(format="png"))
+    url=[None]
+    t1=Thread(target=stickbug_vid, args=((user.avatar_url_as(format="png"), url))).start()
+    t1.join()
     try:
-        file=io.BytesIO(requests.get(url).content)
+        file=io.BytesIO(requests.get(url[0]).content)
         await ctx.channel.send(file=discord.File(file, 'stickbug.mp4'))
     except Exception:
         await ctx.channel.send(url)
