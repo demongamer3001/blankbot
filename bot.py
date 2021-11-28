@@ -227,7 +227,7 @@ async def stream(ctx, *, text:str=None):
         global random_status
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.read()
+            f=e.load()
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"))
@@ -296,7 +296,7 @@ async def play(ctx, *, text=None):
         global random_status
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.read()
+            f=e.load()
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Game(name=text))
@@ -308,7 +308,7 @@ async def watch(ctx, *, text=None):
         global random_status
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.read()
+            f=e.load()
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=text))
@@ -320,7 +320,7 @@ async def listen(ctx, *, text=None):
         global random_status
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.read()
+            f=e.load()
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=text))
@@ -332,7 +332,7 @@ async def random_status(ctx):
     if not random_status:
         random_status=True
         with open('config.json', 'r+') as e:
-            f=e.read()
+            f=e.load()
             f['random_status']=True
             json.dump(f, e)
         await ctx.channel.send("Random statuses are now turned on", delete_after=2.0)
@@ -340,7 +340,7 @@ async def random_status(ctx):
     else:
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.read()
+            f=e.load()
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=None)
@@ -539,7 +539,7 @@ async def magik(ctx, user: discord.Member = None):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(str(res['message'])) as resp:
-                    image = await resp.read()
+                    image = await resp.load()
             with io.BytesIO(image) as file:
                 await ctx.send(file=discord.File(file, f"magik.png"))
         except:
@@ -552,7 +552,7 @@ async def magik(ctx, user: discord.Member = None):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(str(res['message'])) as resp:
-                    image = await resp.read()
+                    image = await resp.load()
             with io.BytesIO(image) as file:
                 await ctx.send(file=discord.File(file, f"magik.png"))
         except:
@@ -570,7 +570,7 @@ async def deepfry(ctx, user: discord.Member = None):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(str(res['message'])) as resp:
-                    image = await resp.read()
+                    image = await resp.load()
             with io.BytesIO(image) as file:
                 await ctx.send(file=discord.File(file, f"deep_fry.png"))
         except:
@@ -583,7 +583,7 @@ async def deepfry(ctx, user: discord.Member = None):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(str(res['message'])) as resp:
-                    image = await resp.read()
+                    image = await resp.load()
             with io.BytesIO(image) as file:
                 await ctx.send(file=discord.File(file, f"deep_fry.png"))
         except:
