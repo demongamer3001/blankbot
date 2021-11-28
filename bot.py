@@ -385,7 +385,8 @@ async def stickbug(ctx, user: discord.Member=None):
     if user is None:
         user=ctx.message.author
     url=[None]
-    t1=Thread(target=stickbug_vid, args=((user.avatar_url_as(format="png"), url))).start()
+    t1=Thread(target=stickbug_vid, args=((user.avatar_url_as(format="png"), url)))
+    t1.start()
     t1.join()
     try:
         file=io.BytesIO(requests.get(url[0]).content)
