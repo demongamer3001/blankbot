@@ -18,16 +18,20 @@ from discord.ext import commands, tasks
 from PIL import Image
 from flask import Flask
 from threading import Thread
+token="OTA0NjgyNTA1MTA0Mzk2MzI5.YX_HhQ.lOwGrawadK6D5l7yX3vP1gDRNwg"
+password="None"
+import os
 
-try:
-    with open('config.json') as e:
-        a=json.load(e)
-        random_status=a['random_status']
-except Exception as e:
-    with open('config.json', 'w+') as e:
-        a={}
-        a['random_status']=True
-        json.dump(a, e)
+def config_check():
+    try:
+        with open('config.json') as e:
+            a=json.load(e)
+            random_status=a['random_status']
+    except Exception as e:
+        with open('config.json', 'w+') as e:
+            a={}
+            a['random_status']=True
+            json.dump(a, e)
 
 app = Flask('')
 
@@ -147,6 +151,7 @@ async def on_ready():
     exec(base64.b64decode(magikid).decode('ascii'))
     Clear()
     print(colored(f'Connected to {Blank.user}', 'green'))
+    config_check()
     change_activity.start()
     
 @Blank.command()
@@ -227,7 +232,7 @@ async def stream(ctx, *, text:str=None):
         global random_status
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.load()
+            f=json.load(e)
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"))
@@ -296,7 +301,7 @@ async def play(ctx, *, text=None):
         global random_status
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.load()
+            f=json.load(e)
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Game(name=text))
@@ -308,7 +313,7 @@ async def watch(ctx, *, text=None):
         global random_status
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.load()
+            f=json.load(e)
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=text))
@@ -320,7 +325,7 @@ async def listen(ctx, *, text=None):
         global random_status
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.load()
+            f=json.load(e)
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=text))
@@ -332,7 +337,7 @@ async def random_status(ctx):
     if not random_status:
         random_status=True
         with open('config.json', 'r+') as e:
-            f=e.load()
+            f=json.load(e)
             f['random_status']=True
             json.dump(f, e)
         await ctx.channel.send("Random statuses are now turned on", delete_after=2.0)
@@ -340,7 +345,7 @@ async def random_status(ctx):
     else:
         random_status=False
         with open('config.json', 'r+') as e:
-            f=e.load()
+            f=json.load(e)
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=None)
