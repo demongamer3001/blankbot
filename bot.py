@@ -18,9 +18,6 @@ from discord.ext import commands, tasks
 from PIL import Image
 from flask import Flask
 from threading import Thread
-token="OTA0NjgyNTA1MTA0Mzk2MzI5.YX_HhQ.lOwGrawadK6D5l7yX3vP1gDRNwg"
-password="None"
-import os
 
 def config_check():
     try:
