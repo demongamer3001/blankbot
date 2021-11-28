@@ -4,6 +4,7 @@ dt = datetime.now()
 import asyncio
 import io
 import base64
+import time
 import requests
 import random
 import urllib.parse
@@ -381,12 +382,14 @@ async def trash(ctx, user:discord.Member=None):
 @Blank.command(aliases=["sb", "stb"])
 async def stickbug(ctx, user: discord.Member=None):
     await ctx.message.delete()
-    await ctx.channel.send("It will take a little bit of time", delete_after=2.0)
     if user is None:
         user=ctx.message.author
     url=[None]
     t1=Thread(target=stickbug_vid, args=((user.avatar_url_as(format="png"), url)))
     t1.start()
+    m=await ctx.channel.send("It will take a little bit of time")
+    time.sleep(2)
+    await m.delete()
     t1.join()
     try:
         file=io.BytesIO(requests.get(url[0]).content)
