@@ -24,7 +24,7 @@ def config_check():
         with open('config.json') as e:
             a=json.load(e)
             random_status=a['random_status']
-    except Exception as e:
+    except Exception:
         with open('config.json', 'w+') as e:
             a={}
             a['random_status']=True
@@ -219,7 +219,6 @@ value="`avatar magik deepfry kanna neko anime phcomment kannagen changemymind tr
             
     except Exception:
         await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
-        print(e)
 
 @Blank.command()
 async def stream(ctx, *, text:str=None):
@@ -227,8 +226,8 @@ async def stream(ctx, *, text:str=None):
         await ctx.message.delete()
         global random_status
         random_status=False
-        with open('config.json', 'r+') as e:
-            f=json.load(e)
+        with open('config.json', 'w') as e:
+            f={}
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"))
@@ -296,8 +295,8 @@ async def play(ctx, *, text=None):
         await ctx.message.delete()
         global random_status
         random_status=False
-        with open('config.json', 'r+') as e:
-            f=json.load(e)
+        with open('config.json', 'w') as e:
+            f={}
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Game(name=text))
@@ -308,8 +307,8 @@ async def watch(ctx, *, text=None):
         await ctx.message.delete()
         global random_status
         random_status=False
-        with open('config.json', 'r+') as e:
-            f=json.load(e)
+        with open('config.json', 'w') as e:
+            f={}
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=text))
@@ -320,8 +319,8 @@ async def listen(ctx, *, text=None):
         await ctx.message.delete()
         global random_status
         random_status=False
-        with open('config.json', 'r+') as e:
-            f=json.load(e)
+        with open('config.json', 'w') as e:
+            f={}
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=text))
@@ -332,16 +331,16 @@ async def random_status(ctx):
     global random_status
     if not random_status:
         random_status=True
-        with open('config.json', 'r+') as e:
-            f=json.load(e)
+        with open('config.json', 'w') as e:
+            f={}
             f['random_status']=True
             json.dump(f, e)
         await ctx.channel.send("Random statuses are now turned on", delete_after=2.0)
         await change_activity()
     else:
         random_status=False
-        with open('config.json', 'r+') as e:
-            f=json.load(e)
+        with open('config.json', 'w') as e:
+            f={}
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=None)
