@@ -1,6 +1,5 @@
 from termcolor import colored
 from datetime import datetime
-dt = datetime.now()
 import asyncio
 import io
 import base64
@@ -58,6 +57,7 @@ def Clear():
         os.system('clear')
         
 neko_base="https://nekobot.xyz/api/imagegen?type="
+
 
 def kannagen_gen(text):
     endpoint=neko_base+"kannagen&text="+urllib.parse.quote_plus(text)
@@ -160,7 +160,7 @@ async def help(ctx, category=None):
             embed.add_field(name="\uD83E\uDDCA Bot",
 value="`help embed purge del copy ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
-value="`avatar magik deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll empty`", inline=False)
+value="`avatar magik emojj deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
             embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
             embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
@@ -189,6 +189,7 @@ value="`avatar magik deepfry kanna neko anime phcomment kannagen changemymind tr
                 embed=discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"**__Help - Fun__**")
                 embed.add_field(name=f"{prefix}avatar [user]", value="`Send the avatar of a user in the server`")
                 embed.add_field(name=f"{prefix}magik [user]", value="`Send the distorted avatar of a user in the server`")
+                embed.add_field(name=f"{prefix}emoji <emoji>", value="`Sends the image of emoji`")
                 embed.add_field(name=f"{prefix}deepfry [user]", value="`Send the deepfried avatar of a user in the server`")
                 embed.add_field(name=f"{prefix}kanna", value="`Send random image of Kanna Kamui`")
                 embed.add_field(name=f"{prefix}neko", value="`Send random image of neko girl`")
@@ -289,7 +290,23 @@ async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
         await ctx.channel.send(file=discord.File(file, 'ph.png'))
     except Exception:
         await ctx.channel.send(url)
-    
+
+@Blank.command()
+async def emoji(ctx, emoji:discord.Emoji=None):
+            if emoji is None:
+                pass
+            else:
+                
+                if emoji.animated:
+                    url=str(emoji.url_as(format='gif'))
+                else:
+                    url=str(emoji.url_as(format='png'))
+                file=io.BytesIO(requests.get(url).content)
+                try:
+                    await ctx.channel.send(file=discord.File(file, f'{emoji.name}.gif'))
+                except Exception:
+                    await ctx.channel.send(url)
+            
 @Blank.command()
 async def play(ctx, *, text=None):
     if not text == None:
