@@ -1,5 +1,6 @@
 from termcolor import colored
 from datetime import datetime
+dt = datetime.now()
 import asyncio
 import io
 import base64
@@ -153,14 +154,17 @@ async def on_ready():
     
 @Blank.command()
 async def help(ctx, category=None):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     try:
         if category==None:
             embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"""Use `{prefix}help <category>` for more info on a category.""")
             embed.add_field(name="\uD83E\uDDCA Bot",
 value="`help embed purge del copy ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
-value="`avatar magik emojj deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll empty`", inline=False)
+value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
             embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
             embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
@@ -225,7 +229,10 @@ value="`avatar magik emojj deepfry kanna neko anime phcomment kannagen changemym
 @Blank.command()
 async def stream(ctx, *, text:str=None):
     if not text == None:
-        await ctx.message.delete()
+        try:
+            await ctx.message.delete()
+        except Exception:
+            pass
         global random_status
         random_status=False
         with open('config.json', 'w') as e:
@@ -236,7 +243,10 @@ async def stream(ctx, *, text:str=None):
         
 @Blank.command(aliases=["kg", "kw", "kr"])
 async def kannagen(ctx, *, text:str):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     url=kannagen_gen(text)
     try:
         file=io.BytesIO(requests.get(url).content)
@@ -246,7 +256,10 @@ async def kannagen(ctx, *, text:str):
 
 @Blank.command(aliases=["cmm"])
 async def changemymind(ctx, *, text:str):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     url=changemymind_gen(text)
     try:
         file=io.BytesIO(requests.get(url).content)
@@ -256,7 +269,10 @@ async def changemymind(ctx, *, text:str):
 
 @Blank.command()
 async def hnsfw(ctx):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     url=hnsfw_gen()
     try:
         file=io.BytesIO(requests.get(url).content)
@@ -266,7 +282,10 @@ async def hnsfw(ctx):
         
 @Blank.command()
 async def nsfw(ctx):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     url=nsfw_gen()
     try:
         file=io.BytesIO(requests.get(url).content)
@@ -276,7 +295,10 @@ async def nsfw(ctx):
         
 @Blank.command(aliases=["phc"])
 async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     if text is None:
         text="I like it very much"
     if type(user)==str:
@@ -293,6 +315,10 @@ async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
 
 @Blank.command()
 async def emoji(ctx, emoji:discord.Emoji=None):
+            try:
+                await ctx.message.delete()
+            except Exception:
+                pass
             if emoji is None:
                 pass
             else:
@@ -310,7 +336,10 @@ async def emoji(ctx, emoji:discord.Emoji=None):
 @Blank.command()
 async def play(ctx, *, text=None):
     if not text == None:
-        await ctx.message.delete()
+        try:
+            await ctx.message.delete()
+        except Exception:
+            pass
         global random_status
         random_status=False
         with open('config.json', 'w') as e:
@@ -322,7 +351,10 @@ async def play(ctx, *, text=None):
 @Blank.command()
 async def watch(ctx, *, text=None):
     if not text == None:
-        await ctx.message.delete()
+        try:
+            await ctx.message.delete()
+        except Exception:
+            pass
         global random_status
         random_status=False
         with open('config.json', 'w') as e:
@@ -334,7 +366,10 @@ async def watch(ctx, *, text=None):
 @Blank.command()
 async def listen(ctx, *, text=None):
     if not text == None:
-        await ctx.message.delete()
+        try:
+            await ctx.message.delete()
+        except Exception:
+            pass
         global random_status
         random_status=False
         with open('config.json', 'w') as e:
@@ -345,7 +380,10 @@ async def listen(ctx, *, text=None):
         
 @Blank.command(aliases=["rs"])
 async def random_status(ctx):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     global random_status
     if not random_status:
         random_status=True
@@ -366,7 +404,10 @@ async def random_status(ctx):
         
 @Blank.command()
 async def kanna(ctx):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     url=kanna_pic()
     try:
         file=io.BytesIO(requests.get(url).content)
@@ -376,7 +417,10 @@ async def kanna(ctx):
         
 @Blank.command()
 async def neko(ctx):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     url=neko_pic()
     try:
         file=io.BytesIO(requests.get(url).content)
@@ -386,7 +430,10 @@ async def neko(ctx):
         
 @Blank.command()
 async def trash(ctx, user:discord.Member=None):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     if user is None:
         user=ctx.message.author
     url=trash_gen(str(user.avatar_url_as(format="png")))
@@ -398,7 +445,10 @@ async def trash(ctx, user:discord.Member=None):
     
 @Blank.command(aliases=["sb", "stb"])
 async def stickbug(ctx, user: discord.Member=None):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     if user is None:
         user=ctx.message.author
     url=[None]
@@ -416,7 +466,10 @@ async def stickbug(ctx, user: discord.Member=None):
 
 @Blank.command(aliases=["whois"])
 async def userinfo(ctx, member: discord.Member = None):
-  await ctx.message.delete()
+  try:
+            await ctx.message.delete()
+  except Exception:
+            pass
   if not member:
         member = ctx.message.author
   roles = ([role for role in member.roles[1:]])
@@ -470,12 +523,21 @@ async def userinfo(ctx, member: discord.Member = None):
 
 @Blank.command(aliases=["del", "quickdel"])
 async def quickdelete(ctx, *, args):
-    await ctx.message.delete()
-    await ctx.send(args, delete_after=0.0001)
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
+    try:
+        await ctx.send(args, delete_after=0.0001)
+    except Exception:
+        pasa
     
 @Blank.command(aliases=["avatar", "pfp"])
 async def av(ctx, user:discord.Member=None):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     if user is None:
         user=ctx.message.author
     if not user.avatar:
@@ -498,7 +560,10 @@ async def av(ctx, user:discord.Member=None):
     
 @Blank.command(aliases=["copyguild", "copyserver"])
 async def copy(ctx):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     await Blank.create_guild(f"copy - {ctx.guild.name}")
     await asyncio.sleep(2)
     for g in Blank.guilds:
@@ -521,7 +586,10 @@ async def copy(ctx):
         
 @Blank.command()
 async def purge(ctx, amount: int):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     async for message in ctx.message.channel.history(limit=amount).filter(lambda m: m.author == Blank.user).map(
             lambda m: m):
         try:
@@ -531,7 +599,10 @@ async def purge(ctx, amount: int):
 
 @Blank.command(aliases=["fancy"])
 async def ascii(ctx, *, text):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     r = requests.get(f'http://artii.herokuapp.com/make?text={urllib.parse.quote_plus(text)}').text
     if len('```\n' + r + '```') > 2000:
         return
@@ -543,7 +614,10 @@ async def empty(ctx):
 
 @Blank.command()
 async def embed(ctx, *, description):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     embed = discord.Embed(description=description,color=discord.Colour.random())
     try:
         await ctx.send(embed=embed)
@@ -552,7 +626,10 @@ async def embed(ctx, *, description):
     
 @Blank.command(aliases=["distort"])
 async def magik(ctx, user: discord.Member = None):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     endpoint = "https://nekobot.xyz/api/imagegen?type=magik&intensity=3&image="
     if user is None:
         avatar = str(ctx.message.author.avatar_url_as(format="png"))
@@ -583,7 +660,10 @@ async def magik(ctx, user: discord.Member = None):
 
 @Blank.command(aliases=["df"])
 async def deepfry(ctx, user: discord.Member = None):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     endpoint = "https://nekobot.xyz/api/imagegen?type=deepfry&image="
     if user is None:
         avatar = str(ctx.message.author.avatar_url_as(format="png"))
@@ -619,7 +699,10 @@ async def roll(ctx, numa: int, numb: int):
             
 @Blank.command(aliases=['wouldyourather', 'would-you-rather', 'wyrq'])
 async def wyr(ctx):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     r = requests.get('https://www.conversationstarters.com/wyrqlist.php').text
     soup = bs4(r, 'html.parser')
     qa = soup.find(id='qa').text
@@ -630,7 +713,10 @@ async def wyr(ctx):
 
 @Blank.command()
 async def topic(ctx): 
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     r = requests.get('https://www.conversationstarters.com/generator.php').content
     soup = bs4(r, 'html.parser')
     topic = soup.find(id="random").text
@@ -639,7 +725,10 @@ async def topic(ctx):
 @Blank.command(aliases=['geolocate', 'iptogeo', 'iptolocation', 'ip2geo', 'ip'])
 async def geoip(ctx, *, ipaddr: str=None):
     if ipaddr is None:
-        await ctx.message.delete()
+        try:
+            await ctx.message.delete()
+        except Exception:
+            pass
         await ctx.channel.send("You have to enter IP address too")
     else:
         await ctx.message.delete()
@@ -673,7 +762,10 @@ async def geoip(ctx, *, ipaddr: str=None):
 
 @Blank.command()
 async def anime(ctx, *, anime):
-    await ctx.message.delete()
+    try:
+            await ctx.message.delete()
+    except Exception:
+            pass
     anime=Anime(anime)
     aurl=anime.url
     animetitle=anime.title_english
