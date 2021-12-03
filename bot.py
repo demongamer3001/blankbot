@@ -313,24 +313,30 @@ async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
         await ctx.channel.send(url)
 
 @Blank.command()
-async def emoji(ctx, emoji:discord.Emoji=None):
-            try:
-                await ctx.message.delete()
-            except Exception:
-                pass
-            if emoji is None:
-                pass
-            else:
-                
-                if emoji.animated:
-                    url=str(emoji.url_as(format='gif'))
-                else:
-                    url=str(emoji.url_as(format='png'))
-                file=io.BytesIO(requests.get(url).content)
-                try:
-                    await ctx.channel.send(file=discord.File(file, f'{emoji.name}.gif'))
-                except Exception:
-                    await ctx.channel.send(url)
+async def emoji(ctx, emoji=None):
+    if emoji is None:
+        pass
+    else:
+               if ":" in emoji:
+                   emoji=(emoji.strip()).split(":")[1]
+               
+               for emojis in ctx.guild.emojis:
+                    if emojis.name.lower()==str(emoji).lower() or str(emojis.id)==str(emoji):
+                        emoji=emojis
+                        try:
+                            await ctx.message.delete()
+                        except Exception:
+                            pass
+                        
+                        if emoji.animated:
+                            url=str(emoji.url_as(format='gif'))
+                        else:
+                            url=str(emoji.url_as(format='png'))
+                        file=io.BytesIO(requests.get(url).content)
+                        try:
+                            await ctx.channel.send(file=discord.File(file, f'{emoji.name}.gif'))
+                        except Exception:
+                            await ctx.channel.send(url)
             
 @Blank.command()
 async def play(ctx, *, text=None):
