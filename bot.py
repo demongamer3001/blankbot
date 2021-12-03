@@ -1,6 +1,5 @@
 from termcolor import colored
 from datetime import datetime
-dt = datetime.now()
 import asyncio
 import io
 import base64
