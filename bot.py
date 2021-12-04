@@ -249,7 +249,7 @@ async def kannagen(ctx, *, text:str):
     url=kannagen_gen(text)
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'kanna.png'))
+        await ctx.channel.send(file=discord.File(file, 'blank_kanna.png'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -262,7 +262,7 @@ async def changemymind(ctx, *, text:str):
     url=changemymind_gen(text)
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'cmm.png'))
+        await ctx.channel.send(file=discord.File(file, 'blank_cmm.png'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -275,7 +275,7 @@ async def hnsfw(ctx):
     url=hnsfw_gen()
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'hnsfw.png'))
+        await ctx.channel.send(file=discord.File(file, 'blank_hnsfw.png'))
     except Exception:
         await ctx.channel.send(url)
         
@@ -288,7 +288,7 @@ async def nsfw(ctx):
     url=nsfw_gen()
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'nsfw.png'))
+        await ctx.channel.send(file=discord.File(file, 'blank_nsfw.png'))
     except Exception:
         await ctx.channel.send(url)
         
@@ -308,7 +308,7 @@ async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
     url=phcomment_gen(name, image, text)
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'ph.png'))
+        await ctx.channel.send(file=discord.File(file, 'blank_ph.png'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -335,7 +335,10 @@ async def emoji(ctx, emoji=None):
                             url=str(emoji.url_as(format='png'))
                         file=io.BytesIO(requests.get(url).content)
                         try:
-                            await ctx.channel.send(file=discord.File(file, f'{emoji.name}.gif'))
+                            if ".gif" in url:
+                                await ctx.channel.send(file=discord.File(file, f'blank_{emoji.name}.gif'))
+                            else:
+                                await ctx.channel.send(file=discord.File(file, f'blank_{emoji.name}.png'))
                         except Exception:
                             await ctx.channel.send(url)
             
@@ -417,7 +420,7 @@ async def kanna(ctx):
     url=kanna_pic()
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'kanna.png'))
+        await ctx.channel.send(file=discord.File(file, 'blank_kanna.png'))
     except Exception:
         await ctx.channel.send(url)
         
@@ -430,7 +433,7 @@ async def neko(ctx):
     url=neko_pic()
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'neko.png'))
+        await ctx.channel.send(file=discord.File(file, 'blank_neko.png'))
     except Exception:
         await ctx.channel.send(url)
         
@@ -445,7 +448,7 @@ async def trash(ctx, user:discord.Member=None):
     url=trash_gen(str(user.avatar_url_as(format="png")))
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'trash.png'))
+        await ctx.channel.send(file=discord.File(file, 'blank_trash.png'))
     except Exception:
         await ctx.channel.send(url)
     
@@ -466,7 +469,7 @@ async def stickbug(ctx, user: discord.Member=None):
     t1.join()
     try:
         file=io.BytesIO(requests.get(url[0]).content)
-        await ctx.channel.send(file=discord.File(file, 'stickbug.mp4'))
+        await ctx.channel.send(file=discord.File(file, 'blank_stickbug.mp4'))
     except Exception:
         await ctx.channel.send(url)
 
