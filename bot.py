@@ -19,9 +19,6 @@ from PIL import Image
 from flask import Flask
 from threading import Thread
 
-import os
-password="None"
-token="OTA0NjgyNTA1MTA0Mzk2MzI5.YaL1YQ.TtlIHCjjLID70_G2t8WPBZJ9w88"
 
 def is_image_url(image_link):
     image_formats = ("image/png", "image/jpeg", "image/jpg", "image/gif")
