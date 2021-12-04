@@ -1,6 +1,5 @@
 from termcolor import colored
 from datetime import datetime
-dt=datetime.now()
 import asyncio
 import io
 import base64
@@ -86,19 +85,6 @@ def Clear():
         os.system('clear')
         
 neko_base="https://nekobot.xyz/api/imagegen?type="
-
-def uptime_calc():
-    global dt
-    time=(datetime.now()-dt).total_seconds
-    if time<60:
-        value=f'{int(time)} seconds'
-    elif time>=60 and time<3600:
-        value=f'{int(time/60)} minutes and {int(time%60)} seconds'
-    elif time>=3600 and time<86400:
-        value=f'{int(time/3600)} hours {int((time%3600)/60)} minutes and {int((time%3600)%60)} seconds'
-    else:
-        value=f'{int(time/86400)} days {int((time%86400)/3600)} hours {int(((time%86400)%3600)/60)} minutes and {int(((time%86400)%3600)%60)} seconds'
-    return value
 
 def kannagen_gen(text):
     endpoint=neko_base+"kannagen&text="+urllib.parse.quote_plus(text)
@@ -202,7 +188,7 @@ async def help(ctx, category=None):
         if category==None:
             embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"""Use `{prefix}help <category>` for more info on a category.""")
             embed.add_field(name="\uD83E\uDDCA Bot",
-value="`help embed purge del copy ip whois stream play watch listen random_status uptime share`", inline=False)
+value="`help embed purge del copy ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
 value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
@@ -228,8 +214,6 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
                 embed.add_field(name=f"{prefix}watch <text>", value="`Set watching status`")
                 embed.add_field(name=f"{prefix}listen <text>", value="`Set listening status`")
                 embed.add_field(name=f"{prefix}random_status", value="`Turn random statuses on/off`")
-                embed.add_field(name=f"{prefix}uptime", value="`Shows the uptime of the bot`")
-                embed.add_field(name=f"{prefix}share [user]", value="`Send instructions to use the bot`")
                 await ctx.channel.send(embed=embed)
             elif category.lower()=="fun":
                 embed=discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"**__Help - Fun__**")
@@ -267,15 +251,6 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
             
     except Exception:
         await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
-
-@Blank.command()
-async def uptime(ctx):
-    try:
-        await ctx.message.delete()
-    except Exception:
-        pass
-    upt=uptime_calc()
-    await ctx.channel.send(upt)
 
 @Blank.command()
 async def stream(ctx, *, text:str=None):
@@ -394,21 +369,6 @@ async def emoji(ctx, emoji=None):
                                 await ctx.channel.send(file=discord.File(file, f'blank_{emoji.name}.png'))
                         except Exception:
                             await ctx.channel.send(url)
-
-@Blank.command()
-async def share(ctx, user:discord.Member=None):
-    try:
-        await ctx.message.delete()
-    except:
-        pass
-    if user is not None:
-        try:
-            await user.send(">To download BlankBot, watch this video: https://vimeo.com/648059378/description")
-        except Exception:
-            await ctx.channel.send(">To download BlankBot, watch this video: https://vimeo.com/648059378/description")
-    else:
-        await ctx.channel.send(">To download BlankBot, watch this video: https://vimeo.com/648059378/description")
-
 
 @Blank.command()
 async def play(ctx, *, text=None):
