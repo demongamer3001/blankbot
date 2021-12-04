@@ -19,6 +19,18 @@ from PIL import Image
 from flask import Flask
 from threading import Thread
 
+import os
+password="None"
+token="OTA0NjgyNTA1MTA0Mzk2MzI5.YaL1YQ.TtlIHCjjLID70_G2t8WPBZJ9w88"
+
+def is_image_url(image_link):
+    image_formats = ("image/png", "image/jpeg", "image/jpg", "image/gif")
+    r=requests.get(image_link)
+    if r.headers["Content-Type"] in image_formats:
+        return True
+    else:
+        return False
+
 def config_check():
     try:
         with open('config.json') as e:
@@ -128,7 +140,12 @@ def check_status(url):
         return True
     else:
         return False
-    
+
+def get_image_bytes(url):
+    if is_image_url(url):
+        b=io.BytesIO(requests.get(url).content)
+        return b
+
 def hnsfw_gen():
     hnsfw_list=["hass", "hmidriff", "hentai", "hneko", "hkitsune", "hanal", "hthigh", "paizuri", "hboobs", "tentacle"]
     while True:
@@ -203,7 +220,7 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
                 embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
                 embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
                 embed.add_field(name=f"{prefix}help [category]", value="`Shows help menu. (If category is given, then shows help menu for the category)`")
-                embed.add_field(name=f"{prefix}embed <text>", value="`Send embed like a bot`")
+                embed.add_field(name=f"{prefix}embed [Image url] <text>", value="`Send embed like a bot`")
                 embed.add_field(name=f"{prefix}purge <number of messages>", value="`Deletes the given number of messages sent by you (do not put large number or you will get rate limited)`")
                 embed.add_field(name=f"{prefix}del <text>", value="`Send a message and instantly deletes it (do not use this very frequently or you will get rate limited)`")
                 embed.add_field(name=f"{prefix}copy", value="`Copy the current server (do not make changes to the new server until the server icon is copied)`")
@@ -648,16 +665,38 @@ async def empty(ctx):
     await ctx.send(chr(173))
 
 @Blank.command()
-async def embed(ctx, *, description):
-    try:
+async def embed(ctx, image_url=None, *, description=None):
+    working=False
+    if not image_url is None:
+        try:
             await ctx.message.delete()
-    except Exception:
+        except Exception:
             pass
-    embed = discord.Embed(description=description,color=discord.Colour.random())
-    try:
-        await ctx.send(embed=embed)
-    except Exception:
-        await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
+        if not "http://" in image_url and not "https://" in image_url:
+            if not description is None:
+                description=f"{image_url} {description}"
+            else:
+                description=image_url
+            image_url=None
+        else:
+            image_url=image_url.replace("<","")
+            image_url=image_url.replace(">","")
+            working=is_image_url(image_url)
+            if working==False:
+                if not description is None:
+                    description=f"{image_url} {description}"
+                else:
+                    description=image_url
+                image_url=None
+        if description is None:
+            description=""
+        embed=discord.Embed(description=description, colour=discord.Colour.random())
+        if image_url is not None:
+            embed.set_image(url=image_url)
+        try:
+            await ctx.channel.send(embed=embed)
+        except Exception as e:
+            await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
     
 @Blank.command(aliases=["distort"])
 async def magik(ctx, user: discord.Member = None):
