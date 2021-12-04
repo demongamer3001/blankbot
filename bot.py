@@ -1,5 +1,6 @@
 from termcolor import colored
 from datetime import datetime
+dt=datetime.now()
 import asyncio
 import io
 import base64
@@ -34,8 +35,36 @@ app = Flask('')
 
 @app.route('/')
 def main():
-    return "Your bot is alive!"
-    
+    html='''<html>
+<head><title>Status</title></head>
+<body><style>
+.button {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+</style>
+<b><font size="30" color="red"><div class="status">BlankBot is active</div></font></b><br><br><button class="button button1" onclick="window.location.href='https://replit.com/@BlankMCPE/Blank-Bot';">Go to repl</button></body></html>'''
+    return html
+            
 def run():
     app.run(host="0.0.0.0", port=8080)
     
@@ -58,6 +87,18 @@ def Clear():
         
 neko_base="https://nekobot.xyz/api/imagegen?type="
 
+def uptime_calc():
+    global dt
+    time=(datetime.now()-dt).total_seconds
+    if time<60:
+        value=f'{int(time)} seconds'
+    elif time>=60 and time<3600:
+        value=f'{int(time/60)} minutes and {int(time%60)} seconds'
+    elif time>=3600 and time<86400:
+        value=f'{int(time/3600)} hours {int((time%3600)/60)} minutes and {int((time%3600)%60)} seconds'
+    else:
+        value=f'{int(time/86400)} days {int((time%86400)/3600)} hours {int(((time%86400)%3600)/60)} minutes and {int(((time%86400)%3600)%60)} seconds'
+    return value
 
 def kannagen_gen(text):
     endpoint=neko_base+"kannagen&text="+urllib.parse.quote_plus(text)
@@ -161,7 +202,7 @@ async def help(ctx, category=None):
         if category==None:
             embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"""Use `{prefix}help <category>` for more info on a category.""")
             embed.add_field(name="\uD83E\uDDCA Bot",
-value="`help embed purge del copy ip whois stream play watch listen random_status`", inline=False)
+value="`help embed purge del copy ip whois stream play watch listen random_status uptime share`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
 value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
@@ -187,6 +228,8 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
                 embed.add_field(name=f"{prefix}watch <text>", value="`Set watching status`")
                 embed.add_field(name=f"{prefix}listen <text>", value="`Set listening status`")
                 embed.add_field(name=f"{prefix}random_status", value="`Turn random statuses on/off`")
+                embed.add_field(name=f"{prefix}uptime", value="`Shows the uptime of the bot`")
+                embed.add_field(name=f"{prefix}share [user]", value="`Send instructions to use the bot`")
                 await ctx.channel.send(embed=embed)
             elif category.lower()=="fun":
                 embed=discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"**__Help - Fun__**")
@@ -224,6 +267,15 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
             
     except Exception:
         await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
+
+@Blank.command()
+async def uptime(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    upt=uptime_calc()
+    await ctx.channel.send(upt)
 
 @Blank.command()
 async def stream(ctx, *, text:str=None):
@@ -291,7 +343,8 @@ async def nsfw(ctx):
         await ctx.channel.send(file=discord.File(file, 'blank_nsfw.png'))
     except Exception:
         await ctx.channel.send(url)
-        
+ 
+
 @Blank.command(aliases=["phc"])
 async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
     try:
@@ -341,7 +394,22 @@ async def emoji(ctx, emoji=None):
                                 await ctx.channel.send(file=discord.File(file, f'blank_{emoji.name}.png'))
                         except Exception:
                             await ctx.channel.send(url)
-            
+
+@Blank.command()
+async def share(ctx, user:discord.Member=None):
+    try:
+        await ctx.message.delete()
+    except:
+        pass
+    if user is not None:
+        try:
+            await user.send(">To download BlankBot, watch this video: https://vimeo.com/648059378/description")
+        except Exception:
+            await ctx.channel.send(">To download BlankBot, watch this video: https://vimeo.com/648059378/description")
+    else:
+        await ctx.channel.send(">To download BlankBot, watch this video: https://vimeo.com/648059378/description")
+
+
 @Blank.command()
 async def play(ctx, *, text=None):
     if not text == None:
