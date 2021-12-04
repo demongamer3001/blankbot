@@ -312,7 +312,7 @@ async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
     except Exception:
         await ctx.channel.send(url)
 
-@Blank.command()
+@Blank.command(aliases=['e', 'emj'])
 async def emoji(ctx, emoji=None):
     if emoji is None:
         pass
@@ -328,7 +328,8 @@ async def emoji(ctx, emoji=None):
                         except Exception:
                             pass
                         
-                        if emoji.animated:
+                        url=str(emoji.url)
+                        if ".gif" in url:
                             url=str(emoji.url_as(format='gif'))
                         else:
                             url=str(emoji.url_as(format='png'))
@@ -549,19 +550,17 @@ async def av(ctx, user:discord.Member=None):
         await ctx.channel.send("User does not has any avatar")
     else:
         if user.is_avatar_animated():
-            await user.avatar_url.save("avatar.gif")
+            avatar=io.BytesIO(requests.get(user.avatar_url_as(format='gif')).content)
             try:
-                await ctx.channel.send(file=discord.File('avatar.gif'))
+                await ctx.channel.send(file=discord.File(avatar, 'blank_avatar.gif'))
             except Exception:
-                await ctx.channel.send(user.avatar_url)
-            os.remove('avatar.gif')
+                await ctx.channel.send(str(user.avatar_url_as(format='gif')))
         else:
-            await user.avatar_url_as(format="png").save("avatar.png")
+            avatar=io.BytesIO(requests.get(user.avatar_url_as(format='png')).content)
             try:
-                await ctx.channel.send(file=discord.File('avatar.png'))
+                await ctx.channel.send(file=discord.File(avatar, 'blank_avatar.png'))
             except Exception:
-                await ctx.channel.send(user.avatar_url_as(format="png"))
-            os.remove('avatar.png')
+                await ctx.channel.send(str(user.avatar_url_as(format="png")))
     
 @Blank.command(aliases=["copyguild", "copyserver"])
 async def copy(ctx):
@@ -611,7 +610,7 @@ async def ascii(ctx, *, text):
     r = requests.get(f'http://artii.herokuapp.com/make?text={urllib.parse.quote_plus(text)}').text
     if len('```\n' + r + '```') > 2000:
         return
-    await ctx.send(f"```{r}```")
+    await ctx.send(f"```\n{r}```")
 @Blank.command()
 async def empty(ctx):
     await ctx.message.delete()
@@ -635,19 +634,17 @@ async def magik(ctx, user: discord.Member = None):
             await ctx.message.delete()
     except Exception:
             pass
-    endpoint = "https://nekobot.xyz/api/imagegen?type=magik&intensity=3&image="
+    endpoint = "https://nekobot.xyz/api/imagegen?type=magik&intensity=4&image="
     if user is None:
         avatar = str(ctx.message.author.avatar_url_as(format="png"))
         endpoint += avatar
         r = requests.get(endpoint)
         res = r.json()
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(str(res['message'])) as resp:
-                    image = await resp.load()
+            image=requests.get(res['message']).content
             with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, f"magik.png"))
-        except:
+                await ctx.send(file=discord.File(file, "blank_magik.png"))
+        except Exception:
             await ctx.send(res['message'])
     else:
         avatar = str(user.avatar_url_as(format="png"))
@@ -655,12 +652,10 @@ async def magik(ctx, user: discord.Member = None):
         r = requests.get(endpoint)
         res = r.json()
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(str(res['message'])) as resp:
-                    image = await resp.load()
+            image=requests.get(res['message']).content
             with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, f"magik.png"))
-        except:
+                await ctx.send(file=discord.File(file, "blank_magik.png"))
+        except Exception:
             await ctx.send(res['message'])
 
 @Blank.command(aliases=["df"])
@@ -676,11 +671,9 @@ async def deepfry(ctx, user: discord.Member = None):
         r = requests.get(endpoint)
         res = r.json()
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(str(res['message'])) as resp:
-                    image = await resp.load()
+            image=requests.get(res['message']).content
             with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, f"deep_fry.png"))
+                await ctx.send(file=discord.File(file, "blank_deep_fry.png"))
         except:
             await ctx.send(res['message'])
     else:
@@ -689,18 +682,17 @@ async def deepfry(ctx, user: discord.Member = None):
         r = requests.get(endpoint)
         res = r.json()
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(str(res['message'])) as resp:
-                    image = await resp.load()
+            image=requests.get(res['message']).content
             with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, f"deep_fry.png"))
+                await ctx.send(file=discord.File(file, "blank_deep_fry.png"))
         except:
             await ctx.send(res['message'])
+ 
 @Blank.command()
 async def roll(ctx, numa: int, numb: int):
-  await ctx.message.delete()
-  n = random.randint(numa, numb)
-  await ctx.send("I choose..."+str(n))          
+    await ctx.message.delete()
+    n = random.randint(numa, numb)
+    await ctx.send("I choose...```\n"+str(n)+"```")          
             
 @Blank.command(aliases=['wouldyourather', 'would-you-rather', 'wyrq'])
 async def wyr(ctx):
