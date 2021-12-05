@@ -4,7 +4,6 @@ import asyncio
 import io
 import base64
 import time
-import requests
 import random
 import urllib.parse
 import urllib.request
