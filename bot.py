@@ -10,6 +10,7 @@ import urllib.parse
 import urllib.request
 from bs4 import BeautifulSoup as bs4
 import aiohttp
+import base64
 import typing
 import discord
 from animec import *
