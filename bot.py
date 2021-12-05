@@ -109,7 +109,57 @@ def phcomment_gen(name, img, text):
     endpoint=neko_base+"phcomment&username="+urllib.parse.quote_plus(name)+"&image="+img+"&text="+urllib.parse.quote_plus(text)
     res=(requests.get(endpoint).json()["message"])
     return res
-    
+
+def short_link(link):
+    base="https://api.shrtco.de/v2/shorten?url="
+    if not link.lower().startswith("https://") and not link.lower().startswith("http://"):
+        try:
+            linkr="https://"+link
+            requests.get(linkr)
+            
+            link=linkr
+        except Exception:
+            try:
+                linkr="http://"+link
+                requests.get(linkr)
+                link=linkr
+            except Exception:
+                result="Url is invalid"
+                return result
+        r=requests.get(base+link)
+        res=r.json()
+        if res["ok"]:
+            result=(res["result"]["full_short_link"]).replace("\\","")
+            result=f'<{result}>'
+            return result
+        else:
+            error=res["error_code"]
+            if error==3:
+                result="Wait a second before making another link"
+            elif error==6:
+                result="Some unknown error occured"
+            elif error==10:
+                result="That url is not allowed"
+            return result
+
+def gender_info(name):
+    base="https://api.genderize.io/?name="
+    r=requests.get(base+name.strip())
+    res=r.json()
+    prob=0
+    if res['probability'] < 0.50:
+        if not res['probability']==0:
+            prob=1
+        else:
+            prob=2
+    if prob==0:
+        result=f"{res['name'].title()} is a {res['gender']}"
+    elif prob==1:
+        result=f"{res['name'].title()} is probably a {res['gender']}"
+    else:
+        result=f"No match found for '{res['name'].title()}'"
+    return result
+            
 def trash_gen(url):
     endpoint=neko_base+"trash&url="+url
     res=(requests.get(endpoint).json()["message"])
@@ -202,9 +252,9 @@ async def help(ctx, category=None):
         if category==None:
             embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"""Use `{prefix}help <category>` for more info on a category.""")
             embed.add_field(name="\uD83E\uDDCA Bot",
-value="`help embed purge del copy ip whois stream play watch listen random_status`", inline=False)
+value="`help embed purge del copy shorten ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
-value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll empty`", inline=False)
+value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
             embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
             embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
@@ -221,6 +271,7 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
                 embed.add_field(name=f"{prefix}purge <number of messages>", value="`Deletes the given number of messages sent by you (do not put large number or you will get rate limited)`")
                 embed.add_field(name=f"{prefix}del <text>", value="`Send a message and instantly deletes it (do not use this very frequently or you will get rate limited)`")
                 embed.add_field(name=f"{prefix}copy", value="`Copy the current server (do not make changes to the new server until the server icon is copied)`")
+                embed.add_field(name=f"{prefix}shorten <link>", value="`Shorten your link`")
                 embed.add_field(name=f"{prefix}ip <ip address>", value="`Get information of an IP address`")
                 embed.add_field(name=f"{prefix}whois [user]", value="`Send information about a user in the server`")
                 embed.add_field(name=f"{prefix}stream <text>", value="`Set streaming status`")
@@ -246,6 +297,7 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
                 embed.add_field(name=f"{prefix}wyr", value="`Send a would-you-rather questiom`")
                 embed.add_field(name=f"{prefix}topic", value="`Send a chat topic`")
                 embed.add_field(name=f"{prefix}roll <first number> <last number>", value="`Choose a random number between the first and last number`")
+                embed.add_field(name=f"{prefix}gender <name>", value="`Predict the gender based on a name (first name only)`")
                 embed.add_field(name=f"{prefix}empty", value="`Send an empty message`")
                 embed.add_field(name=f"{prefix}ascii <text>", value="`Send ascii (long text not supported and does not look correctly on mobile devices)`")
                 embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
@@ -319,7 +371,15 @@ async def hnsfw(ctx):
         await ctx.channel.send(file=discord.File(file, 'blank_hnsfw.png'))
     except Exception:
         await ctx.channel.send(url)
-        
+
+@Blank.command()
+async def shorten(ctx, link):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    await ctx.channel.send(short_link(link))
+                        
 @Blank.command()
 async def nsfw(ctx):
     try:
@@ -823,6 +883,15 @@ async def geoip(ctx, *, ipaddr: str=None):
                 await ctx.channel.send(f"```\nIP Tracker\n\nIP Address: {geo['query']}\nContinent: {geo['continent']}\nCountry: {geo['country']}\nRegion: {geo['regionName']}\nCity: {geo['city']}\nDistrict: {geo['district']}\nZIP Code: {geo['zip']}\nLatitude: {geo['lat']}\nLongitude: {geo['lon']}\nTime Zone: {geo['timezone']}\nCurrency: {geo['currency']}\nISP: {geo['isp']}\nOrganisation: {geo['isp']}\nMobile Data: {geo['mobile']}\n Hosting: {geo['hosting']}\nProxy: {geo['proxy']}```")
         else:
             await ctx.channel.send("Invalid IP Address")
+            
+@Blank.command()
+async def gender(ctx, name: str=None):
+    if name is not None:
+        try:
+            await ctx.message.delete()
+        except Exception:
+            pass
+        await ctx.channel.send(gender_info(name))
 
 @Blank.command()
 async def anime(ctx, *, anime):
