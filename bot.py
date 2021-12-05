@@ -116,7 +116,8 @@ def scrnshot(link):
     else:
         try:
             requests.get(link)
-        except Exception:
+        except Exception as e:
+            print(e)
             return False
     while True:
         r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}?width=1280&height=720')
