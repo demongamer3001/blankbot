@@ -127,11 +127,16 @@ def scrnshot(link):
     else:
         if not checklink(link):
             return False
+    i=0
     while True:
+        i+=1
         r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}')
         if r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
             break
     return r.content
+        if i==3:
+            break
+            return False
 
 def changemymind_gen(text):
     endpoint=neko_base+"changemymind&text="+urllib.parse.quote_plus(text)
@@ -391,7 +396,7 @@ async def webshot(ctx, link:str=None):
             pass
         res=scrnshot(link.strip())
         if res is False:
-            await ctx.channel.send("URL is invalid")
+            await ctx.channel.send("Cannot access that url")
         else:
             try:
                 file=io.BytesIO(res)
