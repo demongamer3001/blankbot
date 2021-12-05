@@ -98,25 +98,34 @@ def kannagen_gen(text):
     endpoint=neko_base+"kannagen&text="+urllib.parse.quote_plus(text)
     res=(requests.get(endpoint).json()["message"])
     return res
- 
+    
+def checklink(link):
+    url = "https://isitdownorjust.me/wp-content/themes/isitdown/check.php"
+
+    headers={"datatype" : "json",
+    "Content-Type" : "application/x-www-form-urlencoded"}
+    data = f"isitdown={urllib.parse.quote_plus(link)}"
+    resp = requests.post(url, headers=headers, data=data)
+    try:
+        a=resp.json()
+        return True
+    except:
+        return False
+        
 def scrnshot(link):
     if not link.startswith("https://") and not link.startswith("http://"):
-        try:
+        
             linkr="https://"+link
-            requests.get(linkr)
-            link=linkr
-        except Exception:
-            try:
-                linkr="http://"+link
-                requests.get(linkr)
+            if checklink(linkr):
                 link=linkr
-            except Exception:
-                return False
+            else:
+                linkr="http://"+link
+                if checklink(linkr):
+                    link=linkr
+                else:
+                    return False
     else:
-        try:
-            requests.get(link)
-        except Exception as e:
-            print(e)
+        if not checklink(link):
             return False
     while True:
         r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}')
