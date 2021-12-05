@@ -69,7 +69,7 @@ def main():
 }
 
 </style>
-<b><font size="30" color="red"><div class="status">BlankBot is active</div></font></b><br><br><button class="button button1" onclick="window.open('https://replit.com/@BlankMCPE/Blank-Bot') target= '_blank';)">Go to repl</button></body></html>'''
+<b><font size="30" color="red"><div class="status">BlankBot is active</div></font></b><br><br><button class="button button1" onclick="window.open('https://replit.com/@BlankMCPE/Blank-Bot');)">Go to repl</button></body></html>'''
     return html
             
 def run():
