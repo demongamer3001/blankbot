@@ -377,7 +377,7 @@ async def shorten(ctx, text=None):
         await ctx.message.delete()
     except Exception:
         pass
-    if not link is None:
+    if not text is None:
         if "<" in text or ">" in text:
             text=text.replace(">","")
             text=text.replace("<","")
