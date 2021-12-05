@@ -133,10 +133,10 @@ def scrnshot(link):
         r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}')
         if r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
             break
-    return r.content
         if i==3:
             break
             return False
+        return r.content
 
 def changemymind_gen(text):
     endpoint=neko_base+"changemymind&text="+urllib.parse.quote_plus(text)
