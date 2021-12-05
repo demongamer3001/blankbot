@@ -99,7 +99,31 @@ def kannagen_gen(text):
     endpoint=neko_base+"kannagen&text="+urllib.parse.quote_plus(text)
     res=(requests.get(endpoint).json()["message"])
     return res
-    
+ 
+def scrnshot(link):
+    if not link.startswith("https://") and not link.startswith("http://"):
+        try:
+            linkr="https://"+link
+            requests.get(linkr)
+            link=linkr
+        except Exception:
+            try:
+                linkr="http://"+link
+                requests.get(linkr)
+                link=linkr
+            except Exception:
+                return False
+    else:
+        try:
+            requests.get(link)
+        except Exception:
+            return False
+    while True:
+        r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}?width=1280&height=720')
+        if r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
+            break
+    return r.content
+
 def changemymind_gen(text):
     endpoint=neko_base+"changemymind&text="+urllib.parse.quote_plus(text)
     res=(requests.get(endpoint).json()["message"])
@@ -252,7 +276,7 @@ async def help(ctx, category=None):
         if category==None:
             embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"""Use `{prefix}help <category>` for more info on a category.""")
             embed.add_field(name="\uD83E\uDDCA Bot",
-value="`help embed purge del copy shorten ip whois stream play watch listen random_status`", inline=False)
+value="`help embed purge del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
 value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
@@ -272,6 +296,7 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
                 embed.add_field(name=f"{prefix}del <text>", value="`Send a message and instantly deletes it (do not use this very frequently or you will get rate limited)`")
                 embed.add_field(name=f"{prefix}copy", value="`Copy the current server (do not make changes to the new server until the server icon is copied)`")
                 embed.add_field(name=f"{prefix}shorten <link>", value="`Shorten your link`")
+                embed.add_field(name=f"{prefix}webshot <link>", value="`Send screenshot of webpage from link`")
                 embed.add_field(name=f"{prefix}ip <ip address>", value="`Get information of an IP address`")
                 embed.add_field(name=f"{prefix}whois [user]", value="`Send information about a user in the server`")
                 embed.add_field(name=f"{prefix}stream <text>", value="`Set streaming status`")
@@ -345,6 +370,25 @@ async def kannagen(ctx, *, text:str):
         await ctx.channel.send(file=discord.File(file, 'blank_kanna.png'))
     except Exception:
         await ctx.channel.send(url)
+
+@Blank.command(aliases=["ss", "ws"])
+async def webshot(ctx, link:str=None):
+    if not link is None:
+        try:
+            await ctx.message.delete()
+        except Exception:
+            pass
+        res=scrnshot(link.strip())
+        if res is False:
+            await ctx.channel.send("URL is invalid")
+        else:
+            try:
+                file=io.BytesIO(res)
+                await ctx.channel.send(file=discord.File(file, 'blank_screenshot.png'))
+            except Exception:
+                r=requests.get('https://nekobot.xyz/api/imagegen?type=animeface&image={res}')
+                r=r.json()['message']
+                await ctx.channel.send(r)
 
 @Blank.command(aliases=["cmm"])
 async def changemymind(ctx, *, text:str):
