@@ -153,9 +153,9 @@ def gender_info(name):
         else:
             prob=2
     if prob==0:
-        result=f"{res['name'].title()} is a {res['gender']}"
+        result=f"{res['name'].title()} is {res['gender']}"
     elif prob==1:
-        result=f"{res['name'].title()} is probably a {res['gender']}"
+        result=f"{res['name'].title()} is probably {res['gender']}"
     else:
         result=f"No match found for '{res['name'].title()}'"
     return result
