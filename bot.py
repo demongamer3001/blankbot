@@ -383,6 +383,8 @@ async def kannagen(ctx, *, text:str):
 @Blank.command(aliases=["ss", "ws"])
 async def webshot(ctx, link:str=None):
     if not link is None:
+        link=link.replace("<","")
+        link=link.replace(">","")
         try:
             await ctx.message.delete()
         except Exception:
