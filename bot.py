@@ -130,6 +130,7 @@ def short_link(link):
     res=r.json()
     if res["ok"]:
             result=(res["result"]["full_short_link"]).replace("\\","")
+            result=f'<{result}>'
             return result
     else:
             error=res["error_code"]
