@@ -136,7 +136,7 @@ def scrnshot(link):
         if i==3:
             break
             return False
-        return r.content
+    return r.content
 
 def changemymind_gen(text):
     endpoint=neko_base+"changemymind&text="+urllib.parse.quote_plus(text)
