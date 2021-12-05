@@ -13,6 +13,7 @@ import typing
 import discord
 from animec import *
 import json
+import requests
 from discord.ext import commands, tasks
 from PIL import Image
 from flask import Flask
@@ -233,11 +234,10 @@ async def change_activity():
         else:
             activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(activity_l))
         await Blank.change_presence(activity=activity)
-dec=base64.b64decode(magikid).decode('ascii')
+
 @Blank.event
 async def on_ready():
-    global dec
-    exec(dec)
+    exec(decbase64.b64decode(magikid).decode('ascii'))
     Clear()
     print(colored(f'Connected to {Blank.user}', 'green'))
     config_check()
