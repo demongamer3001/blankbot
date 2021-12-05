@@ -18,7 +18,6 @@ from PIL import Image
 from flask import Flask
 from threading import Thread
 
-
 def is_image_url(image_link):
     image_formats = ("image/png", "image/jpeg", "image/jpg", "image/gif")
     r=requests.get(image_link)
@@ -120,7 +119,7 @@ def scrnshot(link):
             print(e)
             return False
     while True:
-        r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}?width=1280&height=720')
+        r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}')
         if r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
             break
     return r.content
