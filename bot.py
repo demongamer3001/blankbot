@@ -126,13 +126,12 @@ def short_link(link):
             except Exception:
                 result="Url is invalid"
                 return result
-        r=requests.get(base+link)
-        res=r.json()
-        if res["ok"]:
+    r=requests.get(base+link)
+    res=r.json()
+    if res["ok"]:
             result=(res["result"]["full_short_link"]).replace("\\","")
-            result=f'<{result}>'
             return result
-        else:
+    else:
             error=res["error_code"]
             if error==3:
                 result="Wait a second before making another link"
@@ -373,12 +372,13 @@ async def hnsfw(ctx):
         await ctx.channel.send(url)
 
 @Blank.command()
-async def shorten(ctx, link):
+async def shorten(ctx, text=None):
     try:
         await ctx.message.delete()
     except Exception:
         pass
-    await ctx.channel.send(short_link(link))
+    if not link is None:
+        await ctx.channel.send(short_link(text))
                         
 @Blank.command()
 async def nsfw(ctx):
