@@ -378,6 +378,9 @@ async def shorten(ctx, text=None):
     except Exception:
         pass
     if not link is None:
+        if "<" in text or ">" in text:
+            text=text.replace(">","")
+            text=text.replace("<","")
         await ctx.channel.send(short_link(text))
                         
 @Blank.command()
