@@ -122,7 +122,7 @@ def scrnshot(link):
     
     for i in range(3):
         
-        r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}')
+        r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}?width=1920&height=1080')
         if r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
             break
     if not r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
