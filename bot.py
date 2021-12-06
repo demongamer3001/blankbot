@@ -200,9 +200,36 @@ def stickbug_vid(url, link):
     link[0]=(requests.get(endpoint).json()["message"])
  
 def neko_pic():
-    endpoint="https://neko-love.xyz/api/v1/neko"
-    res=(requests.get(endpoint).json()["url"])
-    return res
+    endpoint=["https://neko-love.xyz/api/v1/neko", "https://nekos.life/api/neko", "https://nekos.life/api/v2/img/neko"]
+    r=requests.get(random.choice(endpoint)).json()
+    if r['url'] is not None:
+        return r['url']
+    elif r['neko'] is not None:
+        return r['neko']
+        
+def lewdkemo_gen():
+    r=requests.get("https://nekos.life/api/v2/img/lewdkemo").json()
+    return r['url']
+    
+def ero_gen():
+    r=requests.get("https://nekos.life/api/v2/img/ero").json()
+    return r['url']
+    
+def htits_gen():
+    r=requests.get("https://nekos.life/api/v2/img/tits").json()
+    return r['url']
+    
+def nekolewd_gif_gen():
+    r=requests.get("https://nekos.life/api/v2/img/nsfw_neko_gif").json()
+    return r['url']
+    
+def hentai_gen():
+    r=requests.get("https://nekos.life/api/v2/img/hentai").json()
+    return r['url']
+    
+def hblowjob_gen():
+    r=requests.get("https://nekos.life/api/v2/img/blowjob").json()
+    return r['url']
     
 def rand_list(list):
     return random.choice(list)
@@ -211,35 +238,11 @@ def get_image_bytes(url):
     if is_image_url(url):
         b=io.BytesIO(requests.get(url).content)
         return b
-
-def hnsfw_gen():
-    hnsfw_list=["hass", "hmidriff", "hentai", "hneko", "hkitsune", "hanal", "hthigh", "paizuri", "hboobs", "tentacle", "nekolewd"]
-    while True:
-        ch=random.choice(hnsfw_list)
-        if ch=="nekolewd":
-            endpoint="https://neko-love.xyz/api/v1/nekolewd"
-            r=requests.get(endpoint).json()['url']
-            break
-        else:
-            endpoint="https://nekobot.xyz/api/image?type="+ch
-            if checklink(endpoint):
-               if not requests.get(endpoint).json()["message"].endswith('.gif'):
-                   break
-    if ch!="nekolewd":
-        res=(requests.get(endpoint).json()["message"])
-        return res
-    else:
-        return r
-    
-def nsfw_gen():
-    nsfw_list=["anal", "gonewild", "ass", "pussy", "thigh", "boobs"]
-    while True:
-        endpoint="https://nekobot.xyz/api/image?type="+random.choice(nsfw_list)
-        if checklink(endpoint):
-           if not requests.get(endpoint).json()["message"].endswith('.gif'):
-               break
-    res=(requests.get(endpoint).json()["message"])
-    return res
+        
+def lewdneko_gen():
+    endpoint=["https://neko-love.xyz/api/v1/nekolewd", "https://neko-love.xyz/api/v1/hololewd"]
+    r=requests.get(random.choice(endpoint)).json()['url']
+    return r
         
 @tasks.loop(minutes=5)
 async def change_activity():
@@ -283,7 +286,7 @@ async def help(ctx, category=None):
 value="`help embed purge del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
 value="`avatar magik emoji deepfry neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
-            embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
+            embed.add_field(name="\uD83E\uDDCA NSFW", value="`lewdneko lewdnekog blowjob boobs lewdkemo erotic hentai`", inline=False)
             embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
             embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
             embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
@@ -337,8 +340,13 @@ value="`avatar magik emoji deepfry neko anime phcomment kannagen changemymind tr
                 embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
                 embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
                 embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
-                embed.add_field(name=f"{prefix}hnsfw", value="`Send hentai NSFW image`")
-                embed.add_field(name=f"{prefix}nsfw", value="`Send NSFW image`")
+                embed.add_field(name=f"{prefix}lewdneko", value="`Hentai neko`")
+                embed.add_field(name=f"{prefix}lewdnekog", value="`Hentai neko gifs`")
+                embed.add_field(name=f"{prefix}blowjob", value="`Hentai blowjob`")
+                embed.add_field(name=f"{prefix}boobs", value="`Hentai boobs`")
+                embed.add_field(name=f"{prefix}lewdkemo", value="`Hentai beastgirls`")
+                embed.add_field(name=f"{prefix}erotic", value="`Erotic hentai stuff`")
+                embed.add_field(name=f"{prefix}hentai", value="`Hentai`")
                 await ctx.channel.send(embed=embed)
             else:
                 await ctx.channel.send('No category with the name __'+category+'__ found', delete_after=2.0)
@@ -409,16 +417,100 @@ async def changemymind(ctx, *, text:str):
         await ctx.channel.send(url)
 
 @Blank.command()
-async def hnsfw(ctx):
+async def lewdneko(ctx):
     try:
         await ctx.message.delete()
     except Exception:
         pass
-    url=hnsfw_gen()
+    url=lewdneko_gen()
     extent=url.rsplit(".", 1)[1]
     try:
         file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_hnsfw.{extent}'))
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def erotic(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=ero_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_hentai.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+        
+@Blank.command()
+async def lewdkemo(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=lewdkemo_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdkemo.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def boobs(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=htits_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_boobs.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def lewdnekog(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=nekolewd_gif_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def hentai(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=hentai_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_hentai.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+        
+@Blank.command()
+async def blowjob(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=hblowjob_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_blowjob.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -433,21 +525,6 @@ async def shorten(ctx, text=None):
             text=text.replace(">","")
             text=text.replace("<","")
         await ctx.channel.send(short_link(text))
-                        
-@Blank.command()
-async def nsfw(ctx):
-    try:
-        await ctx.message.delete()
-    except Exception:
-        pass
-    url=nsfw_gen()
-    extent=url.rsplit(".", 1)[1]
-    try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_nsfw.{extent}'))
-    except Exception:
-        await ctx.channel.send(url)
- 
 
 @Blank.command(aliases=["phc"])
 async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
