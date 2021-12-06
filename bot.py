@@ -204,11 +204,6 @@ def neko_pic():
     res=(requests.get(endpoint).json()["url"])
     return res
     
-def kanna_pic():
-    endpoint="https://nekobot.xyz/api/image?type=kanna"
-    res=(requests.get(endpoint).json()["message"])
-    return res
-    
 def rand_list(list):
     return random.choice(list)
 
@@ -287,7 +282,7 @@ async def help(ctx, category=None):
             embed.add_field(name="\uD83E\uDDCA Bot",
 value="`help embed purge del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
-value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
+value="`avatar magik emoji deepfry neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`hnsfw nsfw`", inline=False)
             embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
             embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
@@ -320,7 +315,6 @@ value="`avatar magik emoji deepfry kanna neko anime phcomment kannagen changemym
                 embed.add_field(name=f"{prefix}magik [user]", value="`Send the distorted avatar of a user in the server`")
                 embed.add_field(name=f"{prefix}emoji <emoji>", value="`Sends the image of emoji`")
                 embed.add_field(name=f"{prefix}deepfry [user]", value="`Send the deepfried avatar of a user in the server`")
-                embed.add_field(name=f"{prefix}kanna", value="`Send random image of Kanna Kamui`")
                 embed.add_field(name=f"{prefix}neko", value="`Send random image of neko girl`")
                 embed.add_field(name=f"{prefix}anime <anime>", value="`Send info about an anime`")
                 embed.add_field(name=f"{prefix}phcomment [user] <text>", value="`Send fake screenshot of the user's pornhub comment`")
@@ -573,20 +567,6 @@ async def random_status(ctx):
             json.dump(f, e)
         await Blank.change_presence(activity=None)
         await ctx.channel.send("Random statuses are now turned off", delete_after=2.0)
-        
-@Blank.command()
-async def kanna(ctx):
-    try:
-        await ctx.message.delete()
-    except Exception:
-        pass
-    url=kanna_pic()
-    extent=url.rsplit(".", 1)[1]
-    try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, 'blank_kanna.png'))
-    except Exception:
-        await ctx.channel.send(url)
         
 @Blank.command()
 async def neko(ctx):
