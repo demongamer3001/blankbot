@@ -396,7 +396,7 @@ async def webshot(ctx, link:str=None):
             pass
         res=scrnshot(link.strip())
         if res is False:
-            await ctx.channel.send("Cannot access that url")
+            await ctx.channel.send("Unable to access URL")
         else:
             try:
                 file=io.BytesIO(res)
