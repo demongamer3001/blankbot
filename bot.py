@@ -100,17 +100,9 @@ def kannagen_gen(text):
     return res
     
 def checklink(link):
-    url = "https://isitdownorjust.me/wp-content/themes/isitdown/check.php"
-
-    headers={"datatype" : "json",
-    "Content-Type" : "application/x-www-form-urlencoded"}
-    data = f"isitdown={urllib.parse.quote_plus(link)}"
-    resp = requests.post(url, headers=headers, data=data)
-    try:
-        a=resp.json()
-        return True
-    except:
-        return False
+    url = f"https://zhihua-lai.com/api/can-visit/?url={link}&hash=bfe582dbce3e921ac79a4a4720f1f68e&_=1638784020148"
+    r=requests.get(url).json()
+    return(r['result'])
         
 def scrnshot(link):
     if not link.startswith("https://") and not link.startswith("http://"):
@@ -127,16 +119,16 @@ def scrnshot(link):
     else:
         if not checklink(link):
             return False
-    i=0
-    while True:
-        i+=1
+    
+    for i in range(3):
+        
         r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}')
         if r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
             break
-        if i==3:
-            return False
-            break
-    return r.content
+    if not r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
+        return False
+    else:
+        return r.content
 
 def changemymind_gen(text):
     endpoint=neko_base+"changemymind&text="+urllib.parse.quote_plus(text)
@@ -151,33 +143,33 @@ def phcomment_gen(name, img, text):
 def short_link(link):
     base="https://api.shrtco.de/v2/shorten?url="
     if not link.lower().startswith("https://") and not link.lower().startswith("http://"):
-        try:
-            linkr="https://"+link
-            requests.get(linkr)
-            
+        linkr="https://"+link
+        if checklink(linkr):
             link=linkr
-        except Exception:
-            try:
+        else:
                 linkr="http://"+link
-                requests.get(linkr)
-                link=linkr
-            except Exception:
-                result="Url is invalid"
-                return result
-    r=requests.get(base+link)
-    res=r.json()
-    if res["ok"]:
+                if checklink(linkr):
+                    link=linkr
+                else:
+                    return "Invalid URL"
+    if not checklink(link):
+        return "Invalid URL"
+        
+    else:
+        r=requests.get(base+link)
+        res=r.json()
+        if res["ok"]:
             result=(res["result"]["full_short_link"]).replace("\\","")
             result=f'<{result}>'
             return result
-    else:
+        else:
             error=res["error_code"]
             if error==3:
                 result="Wait a second before making another link"
             elif error==6:
                 result="Some unknown error occured"
             elif error==10:
-                result="That url is not allowed"
+                result="That URL is not allowed"
             return result
 
 def gender_info(name):
