@@ -127,13 +127,15 @@ def scrnshot(link):
     else:
         if not checklink(link):
             return False
- 
-    for i in range(3):
+    i=0
+    while True:
+        i+=1
         r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}')
         if r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
             break
-    if not r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
-        return False
+        if i==3:
+            return False
+            break
     return r.content
 
 def changemymind_gen(text):
