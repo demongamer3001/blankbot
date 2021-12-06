@@ -236,7 +236,7 @@ def get_image_bytes(url):
         return b
         
 def lewdneko_gen():
-    endpoint=["https://neko-love.xyz/api/v1/nekolewd", "https://neko-love.xyz/api/v1/hololewd"]
+    endpoint=["https://neko-love.xyz/api/v1/nekolewd", "https://nekos.life/api/lewd/neko"]
     r=requests.get(random.choice(endpoint)).json()['url']
     return r
         
