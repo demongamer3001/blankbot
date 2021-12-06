@@ -200,8 +200,8 @@ def stickbug_vid(url, link):
     link[0]=(requests.get(endpoint).json()["message"])
  
 def neko_pic():
-    endpoint="https://nekobot.xyz/api/image?type=neko"
-    res=(requests.get(endpoint).json()["message"])
+    endpoint="https://neko-love.xyz/api/v1/neko"
+    res=(requests.get(endpoint).json()["url"])
     return res
     
 def kanna_pic():
@@ -211,12 +211,6 @@ def kanna_pic():
     
 def rand_list(list):
     return random.choice(list)
-        
-def check_status(url):
-    if requests.get(url).status_code==200:
-        return True
-    else:
-        return False
 
 def get_image_bytes(url):
     if is_image_url(url):
@@ -224,20 +218,29 @@ def get_image_bytes(url):
         return b
 
 def hnsfw_gen():
-    hnsfw_list=["hass", "hmidriff", "hentai", "hneko", "hkitsune", "hanal", "hthigh", "paizuri", "hboobs", "tentacle"]
+    hnsfw_list=["hass", "hmidriff", "hentai", "hneko", "hkitsune", "hanal", "hthigh", "paizuri", "hboobs", "tentacle", "nekolewd"]
     while True:
-        endpoint="https://nekobot.xyz/api/image?type="+random.choice(hnsfw_list)
-        if check_status(endpoint):
-           if not requests.get(endpoint).json()["message"].endswith('.gif'):
-               break
-    res=(requests.get(endpoint).json()["message"])
-    return res
+        ch=random.choice(hnsfw_list)
+        if ch=="nekolewd":
+            endpoint="https://neko-love.xyz/api/v1/nekolewd"
+            r=requests.get(endpoint).json()['url']
+            break
+        else:
+            endpoint="https://nekobot.xyz/api/image?type="+ch
+            if checklink(endpoint):
+               if not requests.get(endpoint).json()["message"].endswith('.gif'):
+                   break
+    if ch!="nekolewd":
+        res=(requests.get(endpoint).json()["message"])
+        return res
+    else:
+        return r
     
 def nsfw_gen():
     nsfw_list=["anal", "gonewild", "ass", "pussy", "thigh", "boobs"]
     while True:
         endpoint="https://nekobot.xyz/api/image?type="+random.choice(nsfw_list)
-        if check_status(endpoint):
+        if checklink(endpoint):
            if not requests.get(endpoint).json()["message"].endswith('.gif'):
                break
     res=(requests.get(endpoint).json()["message"])
@@ -372,7 +375,7 @@ async def kannagen(ctx, *, text:str):
         pass
     url=kannagen_gen(text)
     try:
-        file=io.BytesIO(requests.get(url).content)
+        file=get_image_bytes(url)
         await ctx.channel.send(file=discord.File(file, 'blank_kanna.png'))
     except Exception:
         await ctx.channel.send(url)
@@ -418,9 +421,10 @@ async def hnsfw(ctx):
     except Exception:
         pass
     url=hnsfw_gen()
+    extent=url.rsplit(".", 1)[1]
     try:
-        file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'blank_hnsfw.png'))
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_hnsfw.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -443,9 +447,10 @@ async def nsfw(ctx):
     except Exception:
         pass
     url=nsfw_gen()
+    extent=url.rsplit(".", 1)[1]
     try:
-        file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'blank_nsfw.png'))
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_nsfw.{extent}'))
     except Exception:
         await ctx.channel.send(url)
  
@@ -576,8 +581,9 @@ async def kanna(ctx):
     except Exception:
         pass
     url=kanna_pic()
+    extent=url.rsplit(".", 1)[1]
     try:
-        file=io.BytesIO(requests.get(url).content)
+        file=get_image_bytes(url)
         await ctx.channel.send(file=discord.File(file, 'blank_kanna.png'))
     except Exception:
         await ctx.channel.send(url)
@@ -589,9 +595,10 @@ async def neko(ctx):
     except Exception:
             pass
     url=neko_pic()
+    extent=url.rsplit(".", 1)[1]
     try:
         file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'blank_neko.png'))
+        await ctx.channel.send(file=discord.File(file, f'blank_neko.{extent}'))
     except Exception:
         await ctx.channel.send(url)
         
