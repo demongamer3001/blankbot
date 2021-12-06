@@ -202,7 +202,7 @@ def stickbug_vid(url, link):
 def neko_pic():
     endpoint="https://neko-love.xyz/api/v1/neko"
     r=requests.get(endpoint).json()
-    return r['neko']
+    return r['url']
     
 def rand_list(list):
     return random.choice(list)
