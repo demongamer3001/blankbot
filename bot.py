@@ -202,10 +202,10 @@ def stickbug_vid(url, link):
 def neko_pic():
     endpoint=["https://neko-love.xyz/api/v1/neko", "https://nekos.life/api/neko", "https://nekos.life/api/v2/img/neko"]
     r=requests.get(random.choice(endpoint)).json()
-    if r['url'] is not None:
-        return r['url']
-    elif r['neko'] is not None:
+    if "neko" in r:
         return r['neko']
+    elif "url" in r:
+        return r["url"]
         
 def lewdkemo_gen():
     r=requests.get("https://nekos.life/api/v2/img/lewdkemo").json()
@@ -217,10 +217,6 @@ def ero_gen():
     
 def htits_gen():
     r=requests.get("https://nekos.life/api/v2/img/tits").json()
-    return r['url']
-    
-def nekolewd_gif_gen():
-    r=requests.get("https://nekos.life/api/v2/img/nsfw_neko_gif").json()
     return r['url']
     
 def hentai_gen():
@@ -286,7 +282,7 @@ async def help(ctx, category=None):
 value="`help embed purge del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
 value="`avatar magik emoji deepfry neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
-            embed.add_field(name="\uD83E\uDDCA NSFW", value="`lewdneko lewdnekog blowjob boobs lewdkemo erotic hentai`", inline=False)
+            embed.add_field(name="\uD83E\uDDCA NSFW", value="`lewdneko blowjob boobs lewdkemo erotic hentai`", inline=False)
             embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
             embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
             embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
@@ -341,7 +337,6 @@ value="`avatar magik emoji deepfry neko anime phcomment kannagen changemymind tr
                 embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
                 embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
                 embed.add_field(name=f"{prefix}lewdneko", value="`Hentai neko`")
-                embed.add_field(name=f"{prefix}lewdnekog", value="`Hentai neko gifs`")
                 embed.add_field(name=f"{prefix}blowjob", value="`Hentai blowjob`")
                 embed.add_field(name=f"{prefix}boobs", value="`Hentai boobs`")
                 embed.add_field(name=f"{prefix}lewdkemo", value="`Hentai beastgirls`")
@@ -469,20 +464,6 @@ async def boobs(ctx):
     try:
         file=get_image_bytes(url)
         await ctx.channel.send(file=discord.File(file, f'blank_boobs.{extent}'))
-    except Exception:
-        await ctx.channel.send(url)
-
-@Blank.command()
-async def lewdnekog(ctx):
-    try:
-        await ctx.message.delete()
-    except Exception:
-        pass
-    url=nekolewd_gif_gen()
-    extent=url.rsplit(".", 1)[1]
-    try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
