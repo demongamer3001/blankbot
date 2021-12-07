@@ -130,7 +130,11 @@ def scrnshot(link):
         return r.content
 
 def upload_image(link):
-    return f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
+    while True:
+        url=f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
+        if is_image_url(url):
+            break
+    return url
     
 def nekos_life_getlink(link):
     link="https://render-tron.appspot.com/render/"+link
