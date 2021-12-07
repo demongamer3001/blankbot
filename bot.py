@@ -683,11 +683,9 @@ async def copy(ctx):
                 x = await g.create_category(f"{cate.name}")
                 for chann in cate.channels:
                     if isinstance(chann, discord.VoiceChannel):
-                        await x.create_voice_channel(f"{chann}", bitrate=chann.bitrate, rtc_region=chann.rtc_region, user_limit=chann.user_limit)
-                    if isinstance(chann, discord.StageChannel):
-                        await x.create_stage_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_region, topic=chann.topic, position=chann.position)
+                        await x.create_voice_channel(f"{chann}", bitrate=chann.bitrate, rtc_region=chann.rtc_region, user_limit=chann.user_limit, position=chann.position)
                     if isinstance(chann, discord.TextChannel):
-                        await x.create_text_channel(f"{chann}", nsfw=chann.is_nsfw(), topic=chann.topic, slowmode_delay=chann.slowmode_delay)
+                        await x.create_text_channel(f"{chann}", nsfw=chann.is_nsfw(), topic=chann.topic, slowmode_delay=chann.slowmode_delay, position=chann.position)
             for roles in ctx.guild.roles:
                 await g.create_role(name=roles.name, colour=roles.colour, permissions=roles.permissions, mentionable=roles.mentionable, hoist=roles.hoist)
             
@@ -697,12 +695,11 @@ async def copy(ctx):
                     elif isinstance(chann, discord.VoiceChannel):
                         if chann.category_id is None:
                             await g.create_voice_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_region, position=chann.position)
-                    elif isinstance(chann, discord.StageChannel):
-                        if chann.category_id is None:
-                            await g.create_stage_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_region, topic=chann.topic, position=chann.position)
                     elif isinstance(chann, discord.TextChannel):
                         if chann.category_id is None:
                             await g.create_text_channel(f"{chann}", nsfw=chann.is_nsfw(), topic=chann.topic, slowmode_delay=chann.slowmode_delay, position=chann.position)
+                    else:
+                        pass
                             
     try:
         await g.edit(icon=requests.get(ctx.guild.icon_url).content)
