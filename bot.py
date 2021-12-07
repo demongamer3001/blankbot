@@ -130,8 +130,7 @@ def scrnshot(link):
         return r.content
 
 def upload_image(link):
-    f=json.loads(requests.get("https://beeimg.com/api/upload/url/json/?url="+link).text)["files"]["url"]
-    return f"https:{f}"
+    return f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
     
 def nekos_life_getlink(link):
     link="https://render-tron.appspot.com/render/"+link
