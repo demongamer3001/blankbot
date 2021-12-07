@@ -58,15 +58,12 @@ def main():
   border-radius: 15px;
   box-shadow: 0 9px #999;
 }
-
 .button:hover {background-color: #3e8e41}
-
 .button:active {
   background-color: #3e8e41;
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }
-
 </style>
 <b><font size="30" color="red"><div class="status">BlankBot is active</div></font></b><br><br><button class="button button1" onclick="window.location.href='https://replit.com/@BlankMCPE/Blank-Bot?v=1';">Go to repl</button></body></html>'''
     return html
@@ -688,7 +685,7 @@ async def copy(ctx):
                     if isinstance(chann, discord.VoiceChannel):
                         await x.create_voice_channel(f"{chann}", bitrate=chann.bitrate, rtc_region=chann.rtc_region, user_limit=chann.user_limit)
                     if isinstance(chann, discord.StageChannel):
-                        await x.create_stage_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_limit, topic=chann.topic, position=chann.position)
+                        await x.create_stage_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_region, topic=chann.topic, position=chann.position)
                     if isinstance(chann, discord.TextChannel):
                         await x.create_text_channel(f"{chann}", nsfw=chann.is_nsfw(), topic=chann.topic, slowmode_delay=chann.slowmode_delay)
             for roles in ctx.guild.roles:
@@ -699,10 +696,10 @@ async def copy(ctx):
                         pass
                     elif isinstance(chann, discord.VoiceChannel):
                         if chann.category_id is None:
-                            await g.create_voice_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_limit, position=chann.position)
+                            await g.create_voice_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_region, position=chann.position)
                     elif isinstance(chann, discord.StageChannel):
                         if chann.category_id is None:
-                            await g.create_stage_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_limit, topic=chann.topic, position=chann.position)
+                            await g.create_stage_channel(f"{chann}", bitrate=chann.bitrate, user_limit=chann.user_limit, rtc_region=chann.rtc_region, topic=chann.topic, position=chann.position)
                     elif isinstance(chann, discord.TextChannel):
                         if chann.category_id is None:
                             await g.create_text_channel(f"{chann}", nsfw=chann.is_nsfw(), topic=chann.topic, slowmode_delay=chann.slowmode_delay, position=chann.position)
