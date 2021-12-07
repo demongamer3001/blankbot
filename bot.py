@@ -243,7 +243,7 @@ def lewdkemo_gen():
     return upload_image(nekos_life_getlink(endpoint))
     
 def lewdholo_gen():
-    endpoint="https://nekos.life/api/v2/img/lewdholo"
+    endpoint="https://nekos.life/api/v2/img/hololewd"
     return upload_image(nekos_life_getlink(endpoint))
 
 def fox_girl_gen():
