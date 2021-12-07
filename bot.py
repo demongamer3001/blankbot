@@ -144,17 +144,11 @@ def nekos_life_getlink(link):
             soup=bs4(r, "html.parser")
             f=soup.find("pre")
             f=json.loads(f.text)
-            if 'url' in f:
-                if "cdn.nekos" not in f['url']:
-                    raise Exception("error")
-                else:
-                    break
-            elif 'neko' in f:
-                if "cdn.nekos" not in f['url']:
-                    raise Exception("error")
-                else:
-                    f["url"]=f["neko"]
-                    break
+            if f.has_key("url"):
+                break
+            elif f.has_key("neko"):
+                f["url"]=f["neko"]
+                break
         except Exception:
             pass
     return f['url']
@@ -528,7 +522,7 @@ async def kemonomimi(ctx):
     extent=url.rsplit(".", 1)[1]
     try:
         file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+        await ctx.channel.send(file=discord.File(file, f'blank_kemonomimi.{extent}'))
     except Exception:
         await ctx.channel.send(url)
         
@@ -542,7 +536,7 @@ async def lewd(ctx):
     extent=url.rsplit(".", 1)[1]
     try:
         file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+        await ctx.channel.send(file=discord.File(file, f'blank_lewd.{extent}'))
     except Exception:
         await ctx.channel.send(url)
         
@@ -556,7 +550,7 @@ async def femdom(ctx):
     extent=url.rsplit(".", 1)[1]
     try:
         file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+        await ctx.channel.send(file=discord.File(file, f'blank_femdom.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -570,7 +564,7 @@ async def cum(ctx):
     extent=url.rsplit(".", 1)[1]
     try:
         file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+        await ctx.channel.send(file=discord.File(file, f'blank_cum.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -584,7 +578,7 @@ async def blowjob(ctx):
     extent=url.rsplit(".", 1)[1]
     try:
         file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+        await ctx.channel.send(file=discord.File(file, f'blank_blowjob.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
