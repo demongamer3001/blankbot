@@ -18,6 +18,10 @@ from PIL import Image
 from flask import Flask
 from threading import Thread
 
+import requests, os
+password=None
+token="OTA0NjgyNTA1MTA0Mzk2MzI5.Ya_jxg.RaEgvBv1ibn8Q6Y5UStH-TZwQLM"
+
 def is_image_url(image_link):
     image_formats = ("image/png", "image/jpeg", "image/jpg", "image/gif")
     r=requests.get(image_link)
@@ -144,13 +148,12 @@ def nekos_life_getlink(link):
             soup=bs4(r, "html.parser")
             f=soup.find("pre")
             f=json.loads(f.text)
-            if f.has_key("url"):
+            if "url" in f.keys():
                 break
-            elif f.has_key("neko"):
+            elif "neko" in f.keys():
                 f["url"]=f["neko"]
                 break
         except Exception:
-            pass
     return f['url']
 
 def changemymind_gen(text):
