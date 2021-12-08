@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup as bs4
 import aiohttp
 import typing
 import discord
-from animec import *
+import animec
 import json
 from discord.ext import commands, tasks
 from PIL import Image
@@ -27,6 +27,7 @@ def is_image_url(image_link):
         return False
 
 def config_check():
+    global random_status
     try:
         with open('config.json') as e:
             a=json.load(e)
@@ -36,6 +37,7 @@ def config_check():
             a={}
             a['random_status']=True
             json.dump(a, e)
+            random_status=True
 
 app = Flask('')
 
@@ -99,9 +101,13 @@ def kannagen_gen(text):
     return res
     
 def checklink(link):
-    url = f"https://zhihua-lai.com/api/can-visit/?url={link}&hash=bfe582dbce3e921ac79a4a4720f1f68e&_=1638784020148"
-    r=requests.get(url).json()
-    return(r['result'])
+    for i in range(3):
+        if requests.get("https://render-tron.appspot.com/render/"+link.strip()).status_code==200:
+            res=True
+            break
+        else:
+            res=False
+    return res
         
 def scrnshot(link):
     if not link.startswith("https://") and not link.startswith("http://"):
@@ -292,6 +298,8 @@ def lewdneko_gen():
         
 @tasks.loop(minutes=5)
 async def change_activity():
+    with open('config.json') as e:
+        random_status=json.load(e)['random_status']
     if random_status:
         activity_list=['s', 'p', 'w', 'l']
         activity_s=['Earth', 'Mars', 'Jupiter', 'Mercury', 'Venus', 'Saturn', 'Neptune', 'Uranus']
@@ -309,7 +317,9 @@ async def change_activity():
             activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(activity_w))
         else:
             activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(activity_l))
-        await Blank.change_presence(activity=activity)
+        await Blank.change_presence(activity=activity, status=discord.Status.do_not_disturb)
+    else:
+        pass
         
 @Blank.event
 async def on_ready():
@@ -417,7 +427,7 @@ async def stream(ctx, *, text:str=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"))
+        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"), status=discord.Status.do_not_disturb)
         
 @Blank.command(aliases=["kg", "kw", "kr"])
 async def kannagen(ctx, *, text:str):
@@ -449,8 +459,7 @@ async def webshot(ctx, link:str=None):
                 file=io.BytesIO(res)
                 await ctx.channel.send(file=discord.File(file, 'blank_screenshot.png'))
             except Exception:
-                r=requests.get('https://nekobot.xyz/api/imagegen?type=animeface&image={res}')
-                r=r.json()['message']
+                r=upload_image(res)
                 await ctx.channel.send(r)
 
 @Blank.command(aliases=["cmm"])
@@ -697,7 +706,7 @@ async def play(ctx, *, text=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Game(name=text))
+        await Blank.change_presence(activity=discord.Game(name=text), status=discord.Status.do_not_disturb)
 
 @Blank.command()
 async def watch(ctx, *, text=None):
@@ -712,7 +721,7 @@ async def watch(ctx, *, text=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=text))
+        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=text), status=discord.Status.do_not_disturb)
 
 @Blank.command()
 async def listen(ctx, *, text=None):
@@ -727,7 +736,7 @@ async def listen(ctx, *, text=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=text))
+        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=text), status=discord.Status.do_not_disturb)
         
 @Blank.command(aliases=["rs"])
 async def random_status(ctx):
@@ -736,6 +745,8 @@ async def random_status(ctx):
     except Exception:
         pass
     global random_status
+    with open('config.json') as e:
+        random_status=json.load(e)['random_status']
     if not random_status:
         random_status=True
         with open('config.json', 'w') as e:
@@ -750,9 +761,14 @@ async def random_status(ctx):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=None)
+        await Blank.change_presence(activity=None, status=discord.Status.do_not_disturb)
+        Blank.clear()
         await ctx.channel.send("Random statuses are now turned off", delete_after=2.0)
-        
+
+@Blank.event
+async def on_message_edit(before, after):
+    await Blank.process_commands(after)
+
 @Blank.command()
 async def neko(ctx):
     try:
@@ -1140,7 +1156,7 @@ async def anime(ctx, *, anime):
             await ctx.message.delete()
     except Exception:
             pass
-    anime=Anime(anime)
+    anime=animec.Anime(anime)
     aurl=anime.url
     animetitle=anime.title_english
     adesc=anime.description.replace("[Written by MAL Rewrite]", "")
