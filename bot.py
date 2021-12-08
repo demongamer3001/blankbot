@@ -331,8 +331,8 @@ async def help(ctx, category=None):
             embed.add_field(name="\uD83E\uDDCA Bot",
 value="`help embed purge del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
-value="`avatar magik emoji deepfry neko anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
-            embed.add_field(name="\uD83E\uDDCA NSFW", value="`lewdneko`", inline=False)
+value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
+            embed.add_field(name="\uD83E\uDDCA NSFW", value="`lewdneko lewdkemo lewd blowjob femdom lewdholo cum boobs pussy`", inline=False)
             embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
             embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
             embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
