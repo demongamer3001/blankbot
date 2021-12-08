@@ -762,13 +762,8 @@ async def random_status(ctx):
             f['random_status']=False
             json.dump(f, e)
         await Blank.change_presence(activity=None, status=discord.Status.do_not_disturb)
-        Blank.clear()
         await ctx.channel.send("Random statuses are now turned off", delete_after=2.0)
-
-@Blank.event
-async def on_message_edit(before, after):
-    await Blank.process_commands(after)
-
+        
 @Blank.command()
 async def neko(ctx):
     try:
