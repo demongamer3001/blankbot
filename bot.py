@@ -18,10 +18,6 @@ from PIL import Image
 from flask import Flask
 from threading import Thread
 
-import requests, os
-password=None
-token="OTA0NjgyNTA1MTA0Mzk2MzI5.Ya_jxg.RaEgvBv1ibn8Q6Y5UStH-TZwQLM"
-
 def is_image_url(image_link):
     image_formats = ("image/png", "image/jpeg", "image/jpg", "image/gif")
     r=requests.get(image_link)
@@ -154,6 +150,7 @@ def nekos_life_getlink(link):
                 f["url"]=f["neko"]
                 break
         except Exception:
+            pass
     return f['url']
 
 def changemymind_gen(text):
@@ -368,6 +365,8 @@ value="`avatar magik emoji deepfry neko anime phcomment kannagen changemymind tr
                 embed.add_field(name=f"{prefix}emoji <emoji>", value="`Sends the image of emoji`")
                 embed.add_field(name=f"{prefix}deepfry [user]", value="`Send the deepfried avatar of a user in the server`")
                 embed.add_field(name=f"{prefix}neko", value="`Send random image of neko girl`")
+                embed.add_field(name=f"{prefix}foxgirl", value="`Send random image of fox girl`")
+                embed.add_field(name=f"{prefix}kemonomimi", value="`Send random image of kemonomimi (beast girl)`")
                 embed.add_field(name=f"{prefix}anime <anime>", value="`Send info about an anime`")
                 embed.add_field(name=f"{prefix}phcomment [user] <text>", value="`Send fake screenshot of the user's pornhub comment`")
                 embed.add_field(name=f"{prefix}kannagen <text>", value="`Kanna Kamui writes your text in her board`")
@@ -390,6 +389,14 @@ value="`avatar magik emoji deepfry neko anime phcomment kannagen changemymind tr
                 embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
                 embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
                 embed.add_field(name=f"{prefix}lewdneko", value="`Hentai neko`")
+                embed.add_field(name=f"{prefix}lewdkemo", value="`Hentai kemo`")
+                embed.add_field(name=f"{prefix}lewd", value="`Hentai random`")
+                embed.add_field(name=f"{prefix}blowjob", value="`Hentai blowjob`")
+                embed.add_field(name=f"{prefix}femdom", value="`Hentai femdom`")
+                embed.add_field(name=f"{prefix}lewdholo", value="`Hentai holo`")
+                embed.add_field(name=f"{prefix}cum", value="`Hentai orgasm`")
+                embed.add_field(name=f"{prefix}boobs", value="`Hentai boobs`")
+                embed.add_field(name=f"{prefix}pussy", value="`Hentai pussy`")
                 await ctx.channel.send(embed=embed)
             else:
                 await ctx.channel.send('No category with the name __'+category+'__ found', delete_after=2.0)
