@@ -317,7 +317,7 @@ async def change_activity():
             activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(activity_w))
         else:
             activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(activity_l))
-        await Blank.change_presence(activity=activity, status=discord.Status.do_not_disturb)
+        await Blank.change_presence(activity=activity)
     else:
         pass
         
@@ -427,7 +427,7 @@ async def stream(ctx, *, text:str=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"), status=discord.Status.do_not_disturb)
+        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"))
         
 @Blank.command(aliases=["kg", "kw", "kr"])
 async def kannagen(ctx, *, text:str):
@@ -706,7 +706,7 @@ async def play(ctx, *, text=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Game(name=text), status=discord.Status.do_not_disturb)
+        await Blank.change_presence(activity=discord.Game(name=text))
 
 @Blank.command()
 async def watch(ctx, *, text=None):
@@ -721,7 +721,7 @@ async def watch(ctx, *, text=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=text), status=discord.Status.do_not_disturb)
+        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=text))
 
 @Blank.command()
 async def listen(ctx, *, text=None):
@@ -736,7 +736,7 @@ async def listen(ctx, *, text=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=text), status=discord.Status.do_not_disturb)
+        await Blank.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=text))
         
 @Blank.command(aliases=["rs"])
 async def random_status(ctx):
@@ -761,7 +761,7 @@ async def random_status(ctx):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=None, status=discord.Status.do_not_disturb)
+        await Blank.change_presence(activity=None)
         await ctx.channel.send("Random statuses are now turned off", delete_after=2.0)
         
 @Blank.command()
