@@ -27,7 +27,6 @@ try:
 except:
     os.system('pip install aiohttp')
     import aiohttp
-import typing
 try:
     import discord
 except:
