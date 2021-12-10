@@ -832,9 +832,9 @@ async def trash(ctx, user:discord.Member=None):
 @Blank.command(aliases=["sb", "stb"])
 async def stickbug(ctx, user: discord.Member=None):
     try:
-            await ctx.message.delete()
+        await ctx.message.delete()
     except Exception:
-            pass
+        pass
     if user is None:
         user=ctx.message.author
     url=[None]
@@ -842,7 +842,10 @@ async def stickbug(ctx, user: discord.Member=None):
     t1.start()
     m=await ctx.channel.send("It will take a little bit of time")
     time.sleep(2)
-    await m.delete()
+    try:
+        await m.delete()
+    except Exception:
+        pass
     t1.join()
     try:
         file=io.BytesIO(requests.get(url[0]).content)
@@ -918,7 +921,7 @@ async def quickdelete(ctx, *, args=None):
     try:
         await ctx.send(args, delete_after=0.0001)
     except Exception:
-        pasa
+        pass
     
 @Blank.command(aliases=["avatar", "pfp"])
 async def av(ctx, user:discord.Member=None):
