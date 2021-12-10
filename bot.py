@@ -21,7 +21,7 @@ try:
     from bs4 import BeautifulSoup as bs4
 except:
     os.system('pip install bs4')
-    from bs5 import BeautifulSoup as bs4
+    from bs4 import BeautifulSoup as bs4
 try:
     import aiohttp
 except:
