@@ -865,8 +865,8 @@ async def userinfo(ctx, member: discord.Member = None):
   embed = discord.Embed(colour=discord.Colour.random())
   embed.set_thumbnail(url=member.avatar_url_as(format='png'))
   embed.set_author(name=member, icon_url=member.avatar_url_as(format='png'))
-  embed.add_field(name="Display Name:", value=member.display_name)
-  embed.add_field(name="ID:", value=member.id)
+  embed.add_field(name="Display Name:", value=member.display_name, inline=False)
+  embed.add_field(name="ID:", value=member.id, inline=False)
   acc_age= (datetime.now() - member.created_at).total_seconds()
   if acc_age<3600:
       acc_age="Less than an hour"
@@ -878,7 +878,7 @@ async def userinfo(ctx, member: discord.Member = None):
       acc_age=f"{int(acc_age/2592000)} months {int((acc_age%2592000)/86400)} days"
   else:
       acc_age=f"{int(acc_age/31104000)} years {int((acc_age%31104000)/2592000)} months {int(((acc_age%31104000)%2592000)/86400)} days"
-  embed.add_field(name="Created Account On:", value=f'{member.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")} *({acc_age})*')
+  embed.add_field(name="Created Account On:", value=f'{member.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")} *({acc_age})*', inline=False)
   
   acc_age= (datetime.now() - member.joined_at).total_seconds()
   if acc_age<3600:
@@ -892,12 +892,12 @@ async def userinfo(ctx, member: discord.Member = None):
   else:
       acc_age=f"{int(acc_age/31104000)} years {int((acc_age%31104000)/2592000)} months {int(((acc_age%31104000)%2592000)/86400)} days"
   
-  embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %d %B %Y, %I:%M %p UTC")+f" *({acc_age})*")
+  embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %d %B %Y, %I:%M %p UTC")+f" *({acc_age})*", inline=False)
     
   if roles == []:
-     embed.add_field(name="Highest Role:", value="None")       
+     embed.add_field(name="Highest Role:", value="None", inline=False)       
   else:
-     embed.add_field(name="Highest Role:", value=member.top_role.mention)
+     embed.add_field(name="Highest Role:", value=member.top_role.mention, inline=False)
   try:
       await ctx.channel.send(embed=embed)
   except Exception:
