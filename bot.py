@@ -15,7 +15,11 @@ import asyncio
 import io
 import time
 import random
-import typing
+try:
+    import typing
+except:
+    os.system('pip install typing')
+    import typing
 import urllib.parse
 import urllib.request
 try:
@@ -904,7 +908,9 @@ async def userinfo(ctx, member: discord.Member = None):
         await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
 
 @Blank.command(aliases=["del", "quickdel"])
-async def quickdelete(ctx, *, args):
+async def quickdelete(ctx, *, args=None):
+    if args is None:
+        return
     try:
             await ctx.message.delete()
     except Exception:
@@ -978,7 +984,9 @@ async def copy(ctx):
         pass
         
 @Blank.command()
-async def purge(ctx, amount: int):
+async def purge(ctx, amount: int=None):
+    if amount is None:
+        return
     try:
             await ctx.message.delete()
     except Exception:
@@ -991,7 +999,9 @@ async def purge(ctx, amount: int):
             pass
 
 @Blank.command(aliases=["fancy"])
-async def ascii(ctx, *, text):
+async def ascii(ctx, *, text=None):
+    if text is None:
+        return
     try:
             await ctx.message.delete()
     except Exception:
@@ -1100,7 +1110,11 @@ async def deepfry(ctx, user: discord.Member = None):
             await ctx.send(res['message'])
  
 @Blank.command()
-async def roll(ctx, numa: int, numb: int):
+async def roll(ctx, numa: int=None, numb: int=None):
+    if numa is None:
+        return
+    if numa!=int or numb!=int:
+        return
     await ctx.message.delete()
     n = random.randint(numa, numb)
     await ctx.send("I choose...```\n"+str(n)+"```")          
@@ -1178,7 +1192,9 @@ async def gender(ctx, name: str=None):
         await ctx.channel.send(gender_info(name))
 
 @Blank.command()
-async def anime(ctx, *, anime):
+async def anime(ctx, *, anime: str=None):
+    if anime is None:
+        return
     try:
             await ctx.message.delete()
     except Exception:
