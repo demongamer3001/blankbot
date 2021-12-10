@@ -674,11 +674,13 @@ async def shorten(ctx, text=None):
         await ctx.channel.send(short_link(text))
 
 @Blank.command(aliases=["phc"])
-async def phcomment(ctx, user: typing.Union[discord.Member, str], *, text=None):
+async def phcomment(ctx, user: typing.Union[discord.Member, str]=None, *, text=None):
     try:
         await ctx.message.delete()
     except Exception:
         pass
+    if user is None:
+        user=Blank.user
     if text is None:
         text="I like it very much"
     if type(user)==str:
