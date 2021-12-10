@@ -864,7 +864,7 @@ async def userinfo(ctx, member: discord.Member = None):
   roles = ([role for role in member.roles[1:]])
   embed = discord.Embed(colour=discord.Colour.random())
   embed.set_thumbnail(url=member.avatar_url_as(format='png'))
-  embed.set_author(name=member.user, icon_url=member.avatar_url_as(format='png'))
+  embed.set_author(name=member, icon_url=member.avatar_url_as(format='png'))
   embed.add_field(name="Display Name:", value=member.display_name)
   embed.add_field(name="ID:", value=member.id)
   acc_age= (datetime.now() - member.created_at).total_seconds()
