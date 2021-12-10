@@ -13,7 +13,6 @@ import typing
 import discord
 import animec
 import json
-import typing
 from discord.ext import commands, tasks
 from PIL import Image
 from flask import Flask
