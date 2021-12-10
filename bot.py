@@ -862,11 +862,11 @@ async def userinfo(ctx, member: discord.Member = None):
   if not member:
         member = ctx.message.author
   roles = ([role for role in member.roles[1:]])
-  embed = discord.Embed(colour=discord.Colour.random(), title=f"User Info - {member}")
-  embed.set_thumbnail(url=member.avatar_url)
-
-  embed.add_field(name="ID:", value=member.id)
+  embed = discord.Embed(colour=discord.Colour.random())
+  embed.set_thumbnail(url=member.avatar_url_as(format='png'))
+  embed.set_author(name=member.user, icon_url=member.avatar_url_as(format='png'))
   embed.add_field(name="Display Name:", value=member.display_name)
+  embed.add_field(name="ID:", value=member.id)
   acc_age= (datetime.now() - member.created_at).total_seconds()
   if acc_age<3600:
       acc_age="Less than an hour"
@@ -895,20 +895,13 @@ async def userinfo(ctx, member: discord.Member = None):
   embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %d %B %Y, %I:%M %p UTC")+f" *({acc_age})*")
     
   if roles == []:
-     embed.add_field(name="Roles:", value="None")
-     embed.add_field(name="Highest Role:", value="None")
-     try:
-        await ctx.send(embed=embed)
-     except Exception:
-        await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
-       
+     embed.add_field(name="Highest Role:", value="None")       
   else:
-     embed.add_field(name="Roles:", value=", ".join([role.mention for role in roles]))
      embed.add_field(name="Highest Role:", value=member.top_role.mention)
-     try:
-        await ctx.send(embed=embed)
-     except Exception:
-        await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
+  try:
+      await ctx.channel.send(embed=embed)
+  except Exception:
+      await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
 
 @Blank.command(aliases=["del", "quickdel"])
 async def quickdelete(ctx, *, args=None):
