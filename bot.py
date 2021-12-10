@@ -100,7 +100,7 @@ def main():
   transform: translateY(4px);
 }
 </style>
-<b><font size="30" color="red"><div class="status">BlankBot is active</div></font></b><br><br><button class="button button1" onclick="window.location.href='https://replit.com/@BlankMCPE/Blank-Bot?v=1';">Go to repl</button></body></html>'''
+<b><font size="30" color="red"><div class="status">BlankBot is active</div></font></b><br><br><button class="button button1" onclick="window.location.href='https://www.twitch.tv/BlankMCPE?v=1';">Go to repl</button></body></html>'''
     return html
             
 def run():
@@ -344,7 +344,7 @@ async def change_activity():
     
     
         if activity=="s":
-            activity=discord.Streaming(name=f'from {random.choice(activity_s)}', url="https://replit.com/@BlankMCPE/Blank-Bot")
+            activity=discord.Streaming(name=f'from {random.choice(activity_s)}', url="https://www.twitch.tv/BlankMCPE")
         elif activity=="p":
             activity=discord.Game(name=random.choice(activity_p))
         elif activity=="w":
@@ -461,7 +461,7 @@ async def stream(ctx, *, text:str=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"))
+        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://www.twitch.tv/BlankMCPE"))
         
 @Blank.command(aliases=["kg", "kw", "kr"])
 async def kannagen(ctx, *, text:str):
