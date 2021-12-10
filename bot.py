@@ -1,5 +1,15 @@
+import os
+try:
+    import requests
+except:
+    os.system('pip install requests')
+    import requests
 import base64
-from termcolor import colored
+try:
+    from termcolor import colored
+except:
+    os.system('pip install termcolor')
+    from termcolor import colored
 from datetime import datetime
 import asyncio
 import io
@@ -7,15 +17,33 @@ import time
 import random
 import urllib.parse
 import urllib.request
-from bs4 import BeautifulSoup as bs4
-import aiohttp
+try:
+    from bs4 import BeautifulSoup as bs4
+except:
+    os.system('pip install bs4')
+    from bs5 import BeautifulSoup as bs4
+try:
+    import aiohttp
+except:
+    os.system('pip install aiohttp')
+    import aiohttp
 import typing
-import discord
-import animec
+try:
+    import discord
+except:
+    os.system('pip install discord.py')
+    import discord
+try:
+    import animec
+except:
+    os.system('pip install animec')
 import json
-from discord.ext import commands, tasks
 from PIL import Image
-from flask import Flask
+try:
+    from flask import Flask
+except:
+    os.system('pip install flask')
+    from flask import Flask
 from threading import Thread
 
 def is_image_url(image_link):
