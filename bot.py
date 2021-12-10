@@ -344,7 +344,7 @@ async def change_activity():
     
     
         if activity=="s":
-            activity=discord.Streaming(name=f'from {random.choice(activity_s)}', url="https://twitch.tv/blankmcpe")
+            activity=discord.Streaming(name=f'from {random.choice(activity_s)}', url="https://replit.com/@BlankMCPE/Blank-Bot")
         elif activity=="p":
             activity=discord.Game(name=random.choice(activity_p))
         elif activity=="w":
@@ -461,7 +461,7 @@ async def stream(ctx, *, text:str=None):
             f={}
             f['random_status']=False
             json.dump(f, e)
-        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://twitch.tv/blankmcpe"))
+        await Blank.change_presence(activity=discord.Streaming(name=text, url="https://replit.com/@BlankMCPE/Blank-Bot"))
         
 @Blank.command(aliases=["kg", "kw", "kr"])
 async def kannagen(ctx, *, text:str):
