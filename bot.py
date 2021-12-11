@@ -39,9 +39,10 @@ except:
     import discord
 from discord.ext import commands, tasks
 try:
-    import animec
+    from animec import *
 except:
     os.system('pip install animec')
+    from animec import *
 import json
 from PIL import Image
 try:
@@ -1195,7 +1196,7 @@ async def anime(ctx, *, anime: str=None):
             await ctx.message.delete()
     except Exception:
             pass
-    anime=animec.Anime(anime)
+    anime=Anime(anime)
     aurl=anime.url
     animetitle=anime.title_english
     adesc=anime.description.replace("[Written by MAL Rewrite]", "")
