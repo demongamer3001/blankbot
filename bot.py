@@ -136,7 +136,7 @@ def kannagen_gen(text):
     
 def checklink(link):
     for i in range(3):
-        if requests.get("https://render-tron.appspot.com/render/"+link.strip()).status_code==200:
+        if requests.get("https://render-tron.appspot.com/render/"+urllib.parse.quote_plus(link.strip())).status_code==200:
             res=True
             break
         else:
@@ -158,7 +158,7 @@ def scrnshot(link):
     else:
         if not checklink(link):
             return False
-    
+    link=urllib.parse.quote_plus(link)
     for i in range(3):
         
         link=f'https://render-tron.appspot.com/screenshot/{link}?width=1080&height=720'
@@ -172,6 +172,7 @@ def scrnshot(link):
 def upload_image(link):
     link=link.replace('https://', '')
     link=link.replace('http://', '')
+    link=urllib.parse.quote_plus(link)
     for i in range(3):
         url=f"https://cdn.statically.io/img/{link}"
         if is_image_url(url):
