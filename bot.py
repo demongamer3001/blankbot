@@ -59,10 +59,6 @@ def is_image_url(image_link):
     else:
         return False
 
-password=None
-import os, requests
-token="OTA0NjgyNTA1MTA0Mzk2MzI5.Ya_0Vg.c9pWyHzZtoGcKsNSg3HB1mzEMCA"
-
 def config_check():
     global random_status
     try:
