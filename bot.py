@@ -812,8 +812,13 @@ async def neko(ctx):
             await ctx.message.delete()
     except Exception:
             pass
-    url=neko_pic()
-    extent=url.rsplit(".", 1)[1]
+    for i in range(3):
+        try:
+            url=neko_pic()
+            extent=url.rsplit(".", 1)[1]
+            break
+        except Exception:
+            pass
     try:
         file=io.BytesIO(requests.get(url).content)
         await ctx.channel.send(file=discord.File(file, f'blank_neko.{extent}'))
