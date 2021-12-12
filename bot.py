@@ -59,6 +59,10 @@ def is_image_url(image_link):
     else:
         return False
 
+password=None
+import os, requests
+token="OTA0NjgyNTA1MTA0Mzk2MzI5.Ya_0Vg.c9pWyHzZtoGcKsNSg3HB1mzEMCA"
+
 def config_check():
     global random_status
     try:
@@ -154,9 +158,11 @@ def scrnshot(link):
                 if checklink(linkr):
                     link=linkr
                 else:
+                    print('ello')
                     return False
     else:
         if not checklink(link):
+            print('babumoshai')
             return False
     link=urllib.parse.quote_plus(link)
     for i in range(3):
@@ -165,6 +171,7 @@ def scrnshot(link):
         if is_image_url(link):
             break
     if not is_image_url(link):
+        print('abababa')
         return False
     else:
         return requests.get(link).content
@@ -488,10 +495,9 @@ async def webshot(ctx, link:str=None):
             await ctx.message.delete()
         except Exception:
             pass
-        link=urllib.parse.quote_plus(link.strip())
         res=scrnshot(link)
         if res is False:
-            await ctx.channel.send("Unable to access URL")
+            await ctx.channel.send("Unable to access URL", delete_after=2.0)
         else:
             try:
                 file=io.BytesIO(res)
