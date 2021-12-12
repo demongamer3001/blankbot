@@ -53,9 +53,8 @@ except:
 from threading import Thread
 
 def is_image_url(image_link):
-    image_formats = ("image/png", "image/jpeg", "image/jpg", "image/gif")
     r=requests.get(image_link)
-    if r.headers["Content-Type"] in image_formats:
+    if "image" in r.headers["Content-Type"]:
         return True
     else:
         return False
@@ -162,20 +161,22 @@ def scrnshot(link):
     
     for i in range(3):
         
-        r=requests.get(f'https://render-tron.appspot.com/screenshot/{link}?width=1080&height=720')
-        if r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
+        link=f'https://render-tron.appspot.com/screenshot/{link}?width=1080&height=720'
+        if is_image_url(link):
             break
-    if not r.headers['Content-Type'] in ("image/png", "image/jpeg", "image/jpg", "image/gif"):
+    if not is_image_url(link):
         return False
     else:
-        return r.content
+        return requests.get(link).content
 
 def upload_image(link):
-    while True:
-        url=f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
+    link=link.replace('https://', '')
+    link=link.replace('http://', '')
+    for i in range(3):
+        url=f"https://cdn.statically.io/img/{link}"
         if is_image_url(url):
-            break
-    return url
+            return url
+    return "Unable to access URL"
     
 def nekos_life_getlink(link):
     link="https://render-tron.appspot.com/render/"+link
@@ -486,7 +487,8 @@ async def webshot(ctx, link:str=None):
             await ctx.message.delete()
         except Exception:
             pass
-        res=scrnshot(link.strip())
+        link=urllib.parse.quote_plus(link.strip())
+        res=scrnshot(link)
         if res is False:
             await ctx.channel.send("Unable to access URL")
         else:
