@@ -126,10 +126,10 @@ def gae(link):
     return cool_img_base+'gay?image='+link
 
 def invrt(link):
-    return cool_img_base+'invert?image='+link
+    return cool_img_base+'invert?image='+link.strip()
     
 def jale(link):
-    return cool_img_base+'jail?image='+link
+    return cool_img_base+'jail?image='+link.strip()
 
 def waste(link):
     return cool_img_base+'wasted?image='+link.strip()
@@ -606,21 +606,12 @@ async def invert(ctx, user: typing.Union[discord.Member, str]=None):
         user=user.replace("<", "")
         user.replace(">", "")
         user=user.strip()
-        if not user.startswith("https://") and not user.startswith("http://"):
-        
-            linkr="https://"+user
-            if checklink(linkr):
-                user=linkr
-            else:
-                linkr="http://"+user
-                if checklink(linkr):
-                    user=linkr
-                else:
-                    await ctx.channel.send('Invalid Link')
-                    return
+        if not checklink(user):
+            await ctx.channel.send('Invalid image URL')
+            return
         else:
-            if not checklink(user):
-                await ctx.channel.send('Invalid Link')
+            if not is_image_url(user):
+                await ctx.channel.send('Invalid image URL')
                 return
     else:
         user=str(user.avatar_url_as(format='png'))
