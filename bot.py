@@ -54,7 +54,6 @@ from threading import Thread
 
 def is_image_url(image_link):
     r=requests.get(image_link)
-    print(image_link)
     if "image" in r.headers["Content-Type"]:
         return True
     else:
@@ -436,8 +435,8 @@ value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime invert jail wan
                 embed.add_field(name=f"{prefix}anime <anime>", value="`Send info about an anime`")
                 embed.add_field(name=f"{prefix}invert [user/image link]", value="`Send an image with inverted colours of original`")
                 embed.add_field(name=f"{prefix}jail [user]", value="`Send someone to jail (prison)`")
-                embed.add_field(name=f"{prefix}wanted <anime>", value="`Send info about an anime`")
-                embed.add_field(name=f"{prefix}wasted <anime>", value="`Send info about an anime`")
+                embed.add_field(name=f"{prefix}wanted [user]", value="`Make a wanted poster of a user`")
+                embed.add_field(name=f"{prefix}wasted [user]", value="`GTA V 'wasted' image for a user`")
                 embed.add_field(name=f"{prefix}gaypride [user]", value="`Send gay flag of a user`")
                 embed.add_field(name=f"{prefix}scroll <text>", value="`Generate scroll meme`")
                 embed.add_field(name=f"{prefix}phcomment [user] <text>", value="`Send fake screenshot of the user's pornhub comment`")
