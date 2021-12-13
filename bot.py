@@ -603,6 +603,8 @@ async def invert(ctx, user: typing.Union[discord.Member, str]=None):
     if user is None:
         user=ctx.author
     if type(user) is str:
+        user=user.replace("<", "")
+        user.replace(">", "")
         user=user.strip()
         if not user.startswith("https://") and not user.startswith("http://"):
         
@@ -626,7 +628,7 @@ async def invert(ctx, user: typing.Union[discord.Member, str]=None):
         file=discord.File(io.BytesIO(requests.get(invrt(user)).content), 'Blank_invert.png')
         await ctx.channel.send(file=file)
     except Exception:
-        ctx.channel.send(upload_image(invrt(user)))
+        await ctx.channel.send(upload_image(invrt(user)))
         
 @Blank.command()
 async def jail(ctx, user: discord.Member=None):
