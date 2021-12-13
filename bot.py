@@ -435,7 +435,7 @@ value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime invert jail wan
                 embed.add_field(name=f"{prefix}kemonomimi", value="`Send random image of kemonomimi (beast girl)`")
                 embed.add_field(name=f"{prefix}anime <anime>", value="`Send info about an anime`")
                 embed.add_field(name=f"{prefix}invert [user/image link]", value="`Send an image with inverted colours of original`")
-                embed.add_field(name=f"{prefix} jail [user]", value="`Send someone to jail (prison)`")
+                embed.add_field(name=f"{prefix}jail [user]", value="`Send someone to jail (prison)`")
                 embed.add_field(name=f"{prefix}wanted <anime>", value="`Send info about an anime`")
                 embed.add_field(name=f"{prefix}wasted <anime>", value="`Send info about an anime`")
                 embed.add_field(name=f"{prefix}gaypride [user]", value="`Send gay flag of a user`")
