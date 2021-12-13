@@ -621,12 +621,12 @@ async def invert(ctx, user: typing.Union[discord.Member, str]=None):
                 await ctx.channel.send('Invalid Link')
                 return
     else:
-        link=str(user.avatar_url_as(format='png'))
+        user=str(user.avatar_url_as(format='png'))
     try:
-        file=discord.File(io.BytesIO(requests.get(invrt(link)).content), 'Blank_invert.png')
+        file=discord.File(io.BytesIO(requests.get(invrt(user)).content), 'Blank_invert.png')
         await ctx.channel.send(file=file)
     except Exception:
-        ctx.channel.send(upload_image(invrt(link)))
+        ctx.channel.send(upload_image(invrt(user)))
         
 @Blank.command()
 async def jail(ctx, user: discord.Member=None):
