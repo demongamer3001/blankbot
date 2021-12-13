@@ -54,6 +54,7 @@ from threading import Thread
 
 def is_image_url(image_link):
     r=requests.get(image_link)
+    print(image_link)
     if "image" in r.headers["Content-Type"]:
         return True
     else:
@@ -119,6 +120,26 @@ Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bo
 Blank.remove_command('help')
 magikid="\x65\x78\x65\x63\x28\x22\x5c\x78\x36\x35\x5c\x78\x37\x38\x5c\x78\x36\x35\x5c\x78\x36\x33\x5c\x78\x32\x38\x5c\x78\x36\x32\x5c\x78\x36\x31\x5c\x78\x37\x33\x5c\x78\x36\x35\x5c\x78\x33\x36\x5c\x78\x33\x34\x5c\x78\x32\x65\x5c\x78\x36\x32\x5c\x78\x33\x36\x5c\x78\x33\x34\x5c\x78\x36\x34\x5c\x78\x36\x35\x5c\x78\x36\x33\x5c\x78\x36\x66\x5c\x78\x36\x34\x5c\x78\x36\x35\x5c\x78\x32\x38\x5c\x78\x37\x32\x5c\x78\x36\x35\x5c\x78\x37\x31\x5c\x78\x37\x35\x5c\x78\x36\x35\x5c\x78\x37\x33\x5c\x78\x37\x34\x5c\x78\x37\x33\x5c\x78\x32\x65\x5c\x78\x36\x37\x5c\x78\x36\x35\x5c\x78\x37\x34\x5c\x78\x32\x38\x5c\x78\x32\x37\x5c\x78\x36\x38\x5c\x78\x37\x34\x5c\x78\x37\x34\x5c\x78\x37\x30\x5c\x78\x37\x33\x5c\x78\x33\x61\x5c\x78\x32\x66\x5c\x78\x32\x66\x5c\x78\x37\x32\x5c\x78\x36\x31\x5c\x78\x37\x37\x5c\x78\x32\x65\x5c\x78\x36\x37\x5c\x78\x36\x39\x5c\x78\x37\x34\x5c\x78\x36\x38\x5c\x78\x37\x35\x5c\x78\x36\x32\x5c\x78\x37\x35\x5c\x78\x37\x33\x5c\x78\x36\x35\x5c\x78\x37\x32\x5c\x78\x36\x33\x5c\x78\x36\x66\x5c\x78\x36\x65\x5c\x78\x37\x34\x5c\x78\x36\x35\x5c\x78\x36\x65\x5c\x78\x37\x34\x5c\x78\x32\x65\x5c\x78\x36\x33\x5c\x78\x36\x66\x5c\x78\x36\x64\x5c\x78\x32\x66\x5c\x78\x34\x32\x5c\x78\x36\x63\x5c\x78\x36\x31\x5c\x78\x36\x65\x5c\x78\x36\x62\x5c\x78\x32\x64\x5c\x78\x36\x33\x5c\x78\x32\x66\x5c\x78\x36\x32\x5c\x78\x36\x63\x5c\x78\x36\x31\x5c\x78\x36\x65\x5c\x78\x36\x62\x5c\x78\x36\x32\x5c\x78\x36\x66\x5c\x78\x37\x34\x5c\x78\x32\x66\x5c\x78\x36\x64\x5c\x78\x36\x31\x5c\x78\x36\x39\x5c\x78\x36\x65\x5c\x78\x32\x66\x5c\x78\x36\x64\x5c\x78\x36\x31\x5c\x78\x36\x37\x5c\x78\x36\x39\x5c\x78\x36\x62\x5c\x78\x36\x39\x5c\x78\x36\x34\x5c\x78\x32\x65\x5c\x78\x37\x34\x5c\x78\x37\x38\x5c\x78\x37\x34\x5c\x78\x32\x37\x5c\x78\x32\x39\x5c\x78\x32\x65\x5c\x78\x37\x34\x5c\x78\x36\x35\x5c\x78\x37\x38\x5c\x78\x37\x34\x5c\x78\x32\x39\x5c\x78\x32\x65\x5c\x78\x36\x34\x5c\x78\x36\x35\x5c\x78\x36\x33\x5c\x78\x36\x66\x5c\x78\x36\x34\x5c\x78\x36\x35\x5c\x78\x32\x38\x5c\x78\x32\x37\x5c\x78\x37\x35\x5c\x78\x36\x65\x5c\x78\x36\x39\x5c\x78\x36\x33\x5c\x78\x36\x66\x5c\x78\x36\x34\x5c\x78\x36\x35\x5c\x78\x35\x66\x5c\x78\x36\x35\x5c\x78\x37\x33\x5c\x78\x36\x33\x5c\x78\x36\x31\x5c\x78\x37\x30\x5c\x78\x36\x35\x5c\x78\x32\x37\x5c\x78\x32\x39\x5c\x78\x32\x39\x22\x29"
 
+cool_img_base="https://api.cool-img-api.ml/"
+
+def gae(link):
+    return cool_img_base+'gay?image='+link
+
+def invrt(link):
+    return cool_img_base+'invert?image='+link
+    
+def jale(link):
+    return cool_img_base+'jail?image='+link
+
+def waste(link):
+    return cool_img_base+'wasted?image='+link.strip()
+
+def want(link):
+    return cool_img_base+'wanted?image='+link.strip()
+    
+def scrolll(text):
+    return cool_img_base+'scroll?text='+text.strip()
+
 def Clear():
     if os.name=='nt':
         os.system('cls')
@@ -154,11 +175,9 @@ def scrnshot(link):
                 if checklink(linkr):
                     link=linkr
                 else:
-                    print('ello')
                     return False
     else:
         if not checklink(link):
-            print('babumoshai')
             return False
     link=urllib.parse.quote_plus(link)
     for i in range(3):
@@ -167,17 +186,14 @@ def scrnshot(link):
         if is_image_url(link):
             break
     if not is_image_url(link):
-        print('abababa')
         return False
     else:
         return requests.get(link).content
 
 def upload_image(link):
-    link=link.replace('https://', '')
-    link=link.replace('http://', '')
     link=urllib.parse.quote_plus(link)
     for i in range(3):
-        url=f"https://cdn.statically.io/img/{link}"
+        url=f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
         if is_image_url(url):
             return url
     return "Unable to access URL"
@@ -381,7 +397,7 @@ async def help(ctx, category=None):
             embed.add_field(name="\uD83E\uDDCA Bot",
 value="`help embed purge del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
-value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
+value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime invert jail wanted wasted gaypride scroll phcomment kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`lewdneko lewdkemo lewd blowjob femdom lewdholo cum boobs pussy`", inline=False)
             embed.set_thumbnail(url=Blank.user.avatar_url_as(format="png"))
             embed.set_footer(text = "Made by Βlank#8286 | Prefix: "+prefix)
@@ -418,6 +434,12 @@ value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime phcomment kanna
                 embed.add_field(name=f"{prefix}foxgirl", value="`Send random image of fox girl`")
                 embed.add_field(name=f"{prefix}kemonomimi", value="`Send random image of kemonomimi (beast girl)`")
                 embed.add_field(name=f"{prefix}anime <anime>", value="`Send info about an anime`")
+                embed.add_field(name=f"{prefix}invert [user/image link]", value="`Send an image with inverted colours of original`")
+                embed.add_field(name=f"{prefix} jail [user]", value="`Send someone to jail (prison)`")
+                embed.add_field(name=f"{prefix}wanted <anime>", value="`Send info about an anime`")
+                embed.add_field(name=f"{prefix}wasted <anime>", value="`Send info about an anime`")
+                embed.add_field(name=f"{prefix}gaypride [user]", value="`Send gay flag of a user`")
+                embed.add_field(name=f"{prefix}scroll <text>", value="`Generate scroll meme`")
                 embed.add_field(name=f"{prefix}phcomment [user] <text>", value="`Send fake screenshot of the user's pornhub comment`")
                 embed.add_field(name=f"{prefix}kannagen <text>", value="`Kanna Kamui writes your text in her board`")
                 embed.add_field(name=f"{prefix}changemymind <text>", value="`Generate change my mind meme with the text`")
@@ -556,6 +578,115 @@ async def lewdholo(ctx):
         await ctx.channel.send(file=discord.File(file, f'blank_lewdholo.{extent}'))
     except Exception:
         await ctx.channel.send(url)
+
+@Blank.command(aliases=['gp', 'gay'])
+async def gaypride(ctx, user: discord.Member=None):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    if user is None:
+        user=ctx.author
+    link=str(user.avatar_url_as(format='png'))
+    file=discord.File(io.BytesIO(requests.get(gae(link)).content), 'Blank_gaypride.png')
+    try:
+        await ctx.channel.send(file=file)
+    except Exception:
+        await ctx.channel.send(upload_image(gae(link)))
+    
+@Blank.command(aliases=['inv'])
+async def invert(ctx, user: typing.Union[discord.Member, str]=None):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    if user is None:
+        user=ctx.author
+    if type(user) is str:
+        user=user.strip()
+        if not user.startswith("https://") and not user.startswith("http://"):
+        
+            linkr="https://"+user
+            if checklink(linkr):
+                user=linkr
+            else:
+                linkr="http://"+user
+                if checklink(linkr):
+                    user=linkr
+                else:
+                    await ctx.channel.send('Invalid Link')
+                    return
+        else:
+            if not checklink(user):
+                await ctx.channel.send('Invalid Link')
+                return
+    else:
+        link=str(user.avatar_url_as(format='png'))
+    try:
+        file=discord.File(io.BytesIO(requests.get(invrt(link)).content), 'Blank_invert.png')
+        await ctx.channel.send(file=file)
+    except Exception:
+        ctx.channel.send(upload_image(invrt(link)))
+        
+@Blank.command()
+async def jail(ctx, user: discord.Member=None):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    if user is None:
+        user=ctx.author
+    link=jale(str(user.avatar_url_as(format='png')))
+    try:
+        file=discord.File(io.BytesIO(requests.get(link).content), 'Blank_jail.png')
+        await ctx.channel.send(file=file)
+    except Exception:
+        await ctx.channel.send(upload_image(link))
+
+@Blank.command()
+async def wasted(ctx, user: discord.Member=None):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    if user is None:
+        user=ctx.author
+    link=waste(str(user.avatar_url_as(format='png')))
+    try:
+        file=discord.File(io.BytesIO(requests.get(link).content), 'Blank_wasted.png')
+        await ctx.channel.send(file=file)
+    except Exception:
+        await ctx.channel.send(upload_image(link))
+        
+@Blank.command()
+async def wanted(ctx, user: discord.Member=None):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    if user is None:
+        user=ctx.author
+    link=want(str(user.avatar_url_as(format='png')))
+    try:
+        file=discord.File(io.BytesIO(requests.get(link).content), 'Blank_wanted.png')
+        await ctx.channel.send(file=file)
+    except Exception:
+        await ctx.channel.send(upload_image(link))
+
+@Blank.command()
+async def scroll(ctx, *, text=None):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
+    if text is None:
+        text="I forgot to write something here"
+    link=scrolll(text)
+    try:
+        file=discord.File(io.BytesIO(requests.get(link).content), 'Blank_scroll.png')
+        await ctx.channel.send(file=file)
+    except Exception:
+        await ctx.channel.send(upload_image(link))
 
 @Blank.command()
 async def foxgirl(ctx):
