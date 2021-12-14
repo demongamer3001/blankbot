@@ -613,7 +613,7 @@ async def invert(ctx, user: typing.Union[discord.Member, str]=None):
                 await ctx.channel.send('Invalid image URL')
                 return
         if "?" in user:
-            link=user.lsplit("?", 1)
+            link=user.split("?", 1)
             user=link[0]
             ext="?"+link[1]
             ext=urllib.parse.quote_plus(ext)
