@@ -1176,7 +1176,7 @@ value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime invert jail clo
                 embed.add_field(name=f"{prefix}webshot <link>", value="`Send screenshot of webpage from link`")
                 embed.add_field(name=f"{prefix}ip <ip address>", value="`Get information of an IP address`")
                 embed.add_field(name=f"{prefix}whois [user]", value="`Send information about a user in the server`")
-                embed.add_field(name=f"{prefix}translate <lang/code> <text>", value="`Translate the given text to the given language`")
+                embed.add_field(name=f"{prefix}translate <lang/code> <text> [0/1]", value="`Translate the given text to the given language`")
                 embed.add_field(name=f"{prefix}stream <text>", value="`Set streaming status`")
                 embed.add_field(name=f"{prefix}play <text>", value="`Set playing status`")
                 embed.add_field(name=f"{prefix}watch <text>", value="`Set watching status`")
