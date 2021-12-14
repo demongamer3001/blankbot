@@ -579,7 +579,7 @@ async def on_command_error(ctx, error):
             await ctx.message.delete()
         except Exception:
             pass
-        await ctx.channel.send("***```\n"+error+"```***")
+        await ctx.channel.send("***```\n"+str(error)+"```***")
 
 @Blank.command(aliases=['chat', 'cb'])
 async def chatbot(ctx, *, message: str=None):
