@@ -1514,7 +1514,9 @@ async def foxgirl(ctx):
         await ctx.channel.send(url)
 
 @Blank.command(aliases=['t'])
-async def translate(ctx, lang: str="ja", *, text: str="I like Blankbot 0"):
+async def translate(ctx, lang: str="ja", *, text: str=None):
+    if text is None:
+        return
     try:
         await ctx.message.delete()
     except Exception:
@@ -1523,6 +1525,7 @@ async def translate(ctx, lang: str="ja", *, text: str="I like Blankbot 0"):
     if lang is None:
         await ctx.channel.send('Language is not valid', delete_after=2.0)
         return
+    ttext=text
     if text.strip().endswith(" 0"):
         ttext=text.rsplit(" ", 1)[0]
     elif text.strip().endswith(" 1"):
