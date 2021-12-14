@@ -606,7 +606,8 @@ async def clown(ctx, user: discord.Member=None):
     endpoint="https://api.popcat.xyz/clown?image="+str(user.avatar_url_as(format='png'))
     if is_image_url(endpoint):
         try:
-            await ctx.channel.send(file=discord.File(get_image_bytes(endpoint), 'Blank_clown.png'))
+            img=get_image_bytes(endpoint)
+            await ctx.channel.send(file=discord.File(img, 'Blank_clown.png'))
         except Exception:
             await ctx.channel.send(upload_image(endpoint))
 
