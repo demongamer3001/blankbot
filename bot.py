@@ -612,6 +612,7 @@ async def invert(ctx, user: typing.Union[discord.Member, str]=None):
             if not is_image_url(user):
                 await ctx.channel.send('Invalid image URL')
                 return
+        user=f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{user}"
     else:
         user=str(user.avatar_url_as(format='png'))
     try:
