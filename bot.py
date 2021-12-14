@@ -1320,18 +1320,24 @@ async def changemymind(ctx, *, text:str):
 
 @Blank.command(aliases=['chat'])
 async def chatbot(ctx, *, message: str=None):
+    await ctx.message.delete()
     if message is None:
         await ctx.channel.send('```\nBlankbot: Hello I am BlankBot, please chat with me :)```')
         return
     bot=f"https://api.popcat.xyz/chatbot?msg={urllib.parse.quote_plus(message)}&owner=Blank&botname=Blankbot"
     r=requests.get(bot)
     if r.status_code==200:
+        await ctx.channel.send(message)
         await ctx.channel.send(f"```\nBlankbot: {r.json()['response'].strip()}```")
     else:
         await ctx.channel.send("Chatbot not working right now", delete_after=2.0)
 
 @Blank.command
 async def clown(ctx, user: discord.Member=None):
+    try:
+        await ctx.message.delete()
+    except Exception:
+        pass
     if user is None:
         user=ctx.author
     endpoint="https://api.popcat.xyz/clown?image="+str(user.avatar_url_as(format='png'))
