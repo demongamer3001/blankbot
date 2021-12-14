@@ -591,7 +591,7 @@ async def chatbot(ctx, *, message: str=None):
     r=requests.get(bot)
     if r.status_code==200:
         await ctx.channel.send(message)
-        await ctx.channel.send(f"```\nBlankbot: {r.json()['response'].strip().replace('Pop Dog', client.user.name)}```")
+        await ctx.channel.send(f"```\nBlankbot: {r.json()['response'].strip().replace('Pop Dog', ctx.author.display_name)}```")
     else:
         await ctx.channel.send("Chatbot not working right now", delete_after=2.0)
 
