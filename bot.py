@@ -1153,7 +1153,7 @@ async def help(ctx, category=None):
         if category==None:
             embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"""Use `{prefix}help <category>` for more info on a category.""")
             embed.add_field(name="\uD83E\uDDCA Bot",
-value="`help embed purge del copy shorten webshot ip whois translate stream play watch listen random_status`", inline=False)
+value="`help embed purge del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
 value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime invert jail clown wanted wasted gaypride pat scroll phcomment chatbot kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`lewdneko lewdkemo lewd blowjob femdom lewdholo cum boobs pussy`", inline=False)
@@ -1176,7 +1176,6 @@ value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime invert jail clo
                 embed.add_field(name=f"{prefix}webshot <link>", value="`Send screenshot of webpage from link`")
                 embed.add_field(name=f"{prefix}ip <ip address>", value="`Get information of an IP address`")
                 embed.add_field(name=f"{prefix}whois [user]", value="`Send information about a user in the server`")
-                embed.add_field(name=f"{prefix}translate <lang/code> <text> [0/1]", value="`Translate the given text to the given language`")
                 embed.add_field(name=f"{prefix}stream <text>", value="`Set streaming status`")
                 embed.add_field(name=f"{prefix}play <text>", value="`Set playing status`")
                 embed.add_field(name=f"{prefix}watch <text>", value="`Set watching status`")
@@ -1248,10 +1247,10 @@ async def pat(ctx, user:discord.Member=None):
         user=ctx.author
     avatar=user.avatar_url_as(format='png')
     patpat_gif=patpat(str(avatar))
-    if patpat is False:
+    if patpat_gif is False:
         await ctx.channel.send("Cannot process that user's avatar", delete_after=2.0)
         return
-    img=get_image_bytes(patpat)
+    img=get_image_bytes(patpat_gif)
     try:
         await ctx.channel.send(file=discord.File(img, 'Blank_pat.gif'))
     except Exception:
@@ -1512,49 +1511,6 @@ async def foxgirl(ctx):
         await ctx.channel.send(file=discord.File(file, f'blank_foxgirl.{extent}'))
     except Exception:
         await ctx.channel.send(url)
-
-@Blank.command(aliases=['t'])
-async def translate(ctx, lang: str="ja", *, text: str=None):
-    if text is None:
-        return
-    try:
-        await ctx.message.delete()
-    except Exception:
-        pass
-    lang=langsearch(lang.strip())
-    if lang is None:
-        await ctx.channel.send('Language is not valid', delete_after=2.0)
-        return
-    ttext=text
-    if text.strip().endswith(" 0"):
-        ttext=text.rsplit(" ", 1)[0]
-    elif text.strip().endswith(" 1"):
-        ttext=text.rsplit(" ", 1)[0]
-    r=requests.get(f'https://translate-api.ml/translate?lang={lang}&text='+urllib.parse.quote_plus(ttext)).json()
-    if r['status']==404:
-        if r['error']=="You are being Rate Limited":
-            await ctx.channel.send('Please wait a second before translating another text', delete_after=2.0)
-        elif r['error']=="An Error Occured while Translating the Language":
-            await ctx.channel.send('Invalid Language Code', delete_after=2.0)
-            return
-    elif r['status']==200:
-        if text.strip().endswith(" 0") or text.strip().endswith(" 1"):
-            if text.rsplit(" ", 1)[1]=="0":
-                if r['translated']['pronunciation'] is not None:
-                    await ctx.channel.send(r['translated']['pronunciation'])
-                else:
-                    if r['translated']['text'] is not None:
-                        await ctx.channel.send(r['translated']['text'])
-                    else:
-                        await ctx.channel.send("Cannot translate this text", delete_after=2.0)
-            elif text.rsplit(" ", 1)[1]=="1":
-                    if r['translated']['text'] is not None:
-                        await ctx.channel.send(r['translated']['text'])
-                    else:
-                        if r['translated']['text'] is not None:
-                            await ctx.channel.send(r['translated']['text'])
-                        else:
-                            await ctx.channel.send("Cannot translate this text", delete_after=2.0)
 
 @Blank.command()
 async def kemonomimi(ctx):
