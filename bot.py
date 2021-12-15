@@ -192,13 +192,7 @@ def scrnshot(link):
 def upload_image(link):
     link=urllib.parse.quote_plus(link)
     for i in range(3):
-        urlt=f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
-        url=f"https://normal-api.ml/imgur?title=Blank&url={urlt}"
-        r=requests.get(url).json()
-        if not r['status']=="200":
-            return urlt
-        else:
-            url=r['url']
+        url=f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
         if is_image_url(url):
             return url
     return "Unable to access URL"
@@ -1435,7 +1429,6 @@ async def anime(ctx, *, anime: str=None):
     except Exception:
         message=f"```\nEnglish Title: {animetitle}\n\nOther Title(s): {titlealt}\n\nType: {atype}\n\nGenres: {genres}\n\nEpisodes: {anieps}\n\nRatings: {ratings}\n\nNSFW Status: {nsfwa}\n\nPlot/Synopsis:\n\n{adesc}```"
         await ctx.channel.send(message)
-
 try:
     Blank.run(token, bot=False)
 except discord.errors.HTTPException and discord.errors.LoginFailure:
