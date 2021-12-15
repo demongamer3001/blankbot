@@ -100,7 +100,7 @@ def main():
   transform: translateY(4px);
 }
 </style>
-<b><font size="30" color="red"><div class="status">BlankBot is active</div></font></b><br><br><button class="button button1" onclick="window.location.href='https://www.twitch.tv/BlankMCPE?v=1';">Go to repl</button></body></html>'''
+<b><font size="30" color="red"><div class="status">BlankBot is active</div></font></b><br><br><button class="button button1" onclick="window.location.href='https://replit.com/@BlankMCPE/Blank-Bot'''
     return html
             
 def run():
