@@ -590,10 +590,9 @@ async def chatbot(ctx, *, message: str=None):
     bot=f"https://api.popcat.xyz/chatbot?msg={urllib.parse.quote_plus(message)}&owner=Blank&botname=Blankbot"
     r=requests.get(bot)
     if r.status_code==200:
-        await ctx.channel.send(message)
-        await ctx.channel.send(f"```\nBlankbot: {r.json()['response'].strip().replace('Pop Dog', ctx.author.display_name)}```")
+        await ctx.channel.send(f"{message}\n\n```\nBlankbot: {r.json()['responose'].strip()}```")
     else:
-        await ctx.channel.send("Chatbot not working right now", delete_after=2.0)
+        await ctx.channel.send("Chatbot not working right now!", delete_after=2.0)
 
 @Blank.command()
 async def clown(ctx, user: discord.Member=None):
@@ -1373,22 +1372,22 @@ async def geoip(ctx, *, ipaddr: str=None):
         if geo['status']=='success':
             try:
                 em=discord.Embed(title='__IP Tracker__', colour=discord.Colour.random())
-                em.add_field(name="`IP Address`", value=f"**`{geo['query']}`**", inline=False)
-                em.add_field(name="`Continent`", value=f"**`{geo['continent']}`**", inline=False)
-                em.add_field(name="`Country`", value=f"**`{geo['country']}`**", inline=False)
-                em.add_field(name="`Region`", value=f"**`{geo['regionName']}`**", inline=False)
-                em.add_field(name="`City`", value=f"**`{geo['city']}`**", inline=False)
-                em.add_field(name="`District`", value=f"**`{geo['district']}`**", inline=False)
-                em.add_field(name="`ZIP Code`", value=f"**`{geo['zip']}`**", inline=False)
-                em.add_field(name="`Latitude`", value=f"**`{geo['lat']}`**", inline=False)
-                em.add_field(name="`Longitude`", value=f"**`{geo['lon']}`**", inline=False)
-                em.add_field(name="`Time Zone`", value=f"**`{geo['timezone']}`**", inline=False)
-                em.add_field(name="`Currency`", value=f"**`{geo['currency']}`**", inline=False)
-                em.add_field(name="`ISP`", value=f"**`{geo['isp']}`**", inline=False)
-                em.add_field(name="`Organisation`", value=f"**`{geo['org']}`**", inline=False)
-                em.add_field(name="`Mobile Network`", value=f"**`{geo['mobile']}`**", inline=False)
-                em.add_field(name="`Hosting`", value=f"**`{geo['hosting']}`**", inline=False)
-                em.add_field(name="`Proxy`", value=f"**`{geo['proxy']}`**", inline=False)
+                em.add_field(name="**IP Address**", value=f"`{geo['query']}`", inline=False)
+                em.add_field(name="**Continent**", value=f"`{geo['continent']}`", inline=False)
+                em.add_field(name="**Country**", value=f"`{geo['country']}`", inline=False)
+                em.add_field(name="**Region**", value=f"`{geo['regionName']}`", inline=False)
+                em.add_field(name="**City**", value=f"`{geo['city']}`", inline=False)
+                em.add_field(name="**District**", value=f"`{geo['district']}`", inline=False)
+                em.add_field(name="**ZIP Code**", value=f"`{geo['zip']}`", inline=False)
+                em.add_field(name="**Latitude**", value=f"`{geo['lat']}`", inline=False)
+                em.add_field(name="**Longitude**", value=f"`{geo['lon']}`", inline=False)
+                em.add_field(name="**Time Zone**", value=f"`{geo['timezone']}`", inline=False)
+                em.add_field(name="**Currency**", value=f"`{geo['currency']}`", inline=False)
+                em.add_field(name="**ISP**", value=f"`{geo['isp']}`", inline=False)
+                em.add_field(name="**Organisation**", value=f"`{geo['org']}`", inline=False)
+                em.add_field(name="**Mobile Network**", value=f"`{geo['mobile']}`", inline=False)
+                em.add_field(name="**Hosting**", value=f"`{geo['hosting']}`", inline=False)
+                em.add_field(name="**Proxy**", value=f"`{geo['proxy']}`", inline=False)
                 await ctx.channel.send(embed=em)
             except Exception:
                 await ctx.channel.send(f"```\nIP Tracker\n\nIP Address: {geo['query']}\nContinent: {geo['continent']}\nCountry: {geo['country']}\nRegion: {geo['regionName']}\nCity: {geo['city']}\nDistrict: {geo['district']}\nZIP Code: {geo['zip']}\nLatitude: {geo['lat']}\nLongitude: {geo['lon']}\nTime Zone: {geo['timezone']}\nCurrency: {geo['currency']}\nISP: {geo['isp']}\nOrganisation: {geo['isp']}\nMobile Data: {geo['mobile']}\n Hosting: {geo['hosting']}\nProxy: {geo['proxy']}```")
