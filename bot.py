@@ -225,7 +225,7 @@ def phcomment_gen(name, img, text):
     return res
 
 def short_link(link):
-    base="https://api.shrtco.de/v2/shorten?url="
+    base="https://owo.vc/generate"
     if not link.lower().startswith("https://") and not link.lower().startswith("http://"):
         linkr="https://"+link
         if checklink(linkr):
@@ -240,21 +240,19 @@ def short_link(link):
         return "Invalid URL"
         
     else:
-        r=requests.get(base+link)
+        json={"link": str(link),
+              "generator": "zws",
+              "preventScrape": True,
+              "owoify": True}
+}
+        r=requests.post(base, json=json)
         res=r.json()
-        if res["ok"]:
-            result=(res["result"]["full_short_link"]).replace("\\","")
+        if r.status_code==200:
+            result=res['result']
             result=f'<{result}>'
-            return result
+            return "https://"+result
         else:
-            error=res["error_code"]
-            if error==3:
-                result="Wait a second before making another link"
-            elif error==6:
-                result="Some unknown error occured"
-            elif error==10:
-                result="That URL is not allowed"
-            return result
+            return "Some error occured"
 
 def gender_info(name):
     base="https://api.genderize.io/?name="
@@ -751,7 +749,7 @@ async def scroll(ctx, *, text=None):
         text="I forgot to write something here"
     link=scrolll(text)
     try:
-        file=discord.File(io.BytesIO(requests.get(link).content), 'Blank_scroll.png')
+        file=discord.File(io.BytesIO(requests.get(link).content), 'blank_scroll.png')
         await ctx.channel.send(file=file)
     except Exception:
         await ctx.channel.send(upload_image(link))
