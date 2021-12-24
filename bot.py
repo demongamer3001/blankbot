@@ -249,8 +249,9 @@ def short_link(link):
         res=r.json()
         if r.status_code==200:
             result=res['result']
+            result="https://"+result
             result=f'<{result}>'
-            return "https://"+result
+            return result
         else:
             return "Some error occured"
 
