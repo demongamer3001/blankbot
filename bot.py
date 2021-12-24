@@ -244,7 +244,7 @@ def short_link(link):
               "generator": "zws",
               "preventScrape": True,
               "owoify": True}
-}
+
         r=requests.post(base, json=json)
         res=r.json()
         if r.status_code==200:
