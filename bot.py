@@ -1,63 +1,32 @@
 import os
-try:
-    import requests
-except:
-    os.system('pip install requests')
-    import requests
+import requests
 import base64
-try:
-    from termcolor import colored
-except:
-    os.system('pip install termcolor')
-    from termcolor import colored
+from termcolor import colored
 from datetime import datetime
 import asyncio
 import io
-import time
 import random
-try:
-    import typing
-except:
-    os.system('pip install typing')
-    import typing
+import typing
 import urllib.parse
-import urllib.request
-try:
-    from bs4 import BeautifulSoup as bs4
-except:
-    os.system('pip install bs4')
-    from bs4 import BeautifulSoup as bs4
-try:
-    import aiohttp
-except:
-    os.system('pip install aiohttp')
-    import aiohttp
-try:
-    import discord
-except:
-    os.system('pip install discord.py')
-    import discord
+from bs4 import BeautifulSoup as bs4
+import aiohttp
+import discord
 from discord.ext import commands, tasks
-try:
-    from animec import *
-except:
-    os.system('pip install animec')
-    from animec import *
+from animec import Anime
 import json
-from PIL import Image
-try:
-    from flask import Flask
-except:
-    os.system('pip install flask')
-    from flask import Flask
+from flask import Flask
 from threading import Thread
 
-def is_image_url(image_link):
-    r=requests.get(image_link)
-    if "image" in r.headers["Content-Type"]:
-        return True
-    else:
-        return False
+global headers
+headers={"User-Agent":"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/5340 (KHTML, like Gecko) Chrome/38.0.829.0 Mobile Safari/5340"}
+
+async def is_image_url(image_link):
+    async with aiohttp.ClientSession(headers=headers) as session:
+      async with session.get(image_link, ssl=False) as resp:
+        if "image" in (resp.headers["Content-Type"]):
+            return True
+        else:
+            return False
 
 def config_check():
     global random_status
@@ -121,22 +90,22 @@ magikid="\x65\x78\x65\x63\x28\x22\x5c\x78\x36\x35\x5c\x78\x37\x38\x5c\x78\x36\x3
 
 cool_img_base="https://api.cool-img-api.ml/"
 
-def gae(link):
+async def gae(link):
     return cool_img_base+'gay?image='+link
 
-def invrt(link):
+async def invrt(link):
     return cool_img_base+'invert?image='+link.strip()
     
-def jale(link):
+async def jale(link):
     return cool_img_base+'jail?image='+link.strip()
 
-def waste(link):
-    return cool_img_base+'wasted?image='+link.strip()
+async def waste(link):
+   return cool_img_base+'wasted?image='+link.strip()
 
-def want(link):
+async def want(link):
     return cool_img_base+'wanted?image='+link.strip()
     
-def scrolll(text):
+async def scrolll(text):
     return cool_img_base+'scroll?text='+text.strip()
 
 def Clear():
@@ -149,59 +118,57 @@ def Clear():
         
 neko_base="https://nekobot.xyz/api/imagegen?type="
 
-def kannagen_gen(text):
+async def kannagen_gen(text):
     endpoint=neko_base+"kannagen&text="+urllib.parse.quote_plus(text)
-    res=(requests.get(endpoint).json()["message"])
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(endpoint, ssl=False) as r:
+            res=(await r.json())['message']
     return res
     
-def checklink(link):
+async def checklink(link):
+    endpoint="https://render-tron.appspot.com/render/"+urllib.parse.quote_plus(link.strip())
     for i in range(3):
-        if requests.get("https://render-tron.appspot.com/render/"+urllib.parse.quote_plus(link.strip())).status_code==200:
-            res=True
-            break
-        else:
-            res=False
-    return res
-        
-def scrnshot(link):
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(endpoint, ssl=False) as r:
+                if (r.status)==200:
+                    return True
+    return False
+    
+async def scrnshot(link):
     if not link.startswith("https://") and not link.startswith("http://"):
         
             linkr="https://"+link
-            if checklink(linkr):
+            if (await checklink(linkr)):
                 link=linkr
             else:
                 linkr="http://"+link
-                if checklink(linkr):
+                if (await checklink(linkr)):
                     link=linkr
                 else:
                     return False
     else:
-        if not checklink(link):
+        if not (await checklink(link)):
             return False
     link=urllib.parse.quote_plus(link)
     for i in range(3):
-        
         link=f'https://render-tron.appspot.com/screenshot/{link}?width=1080&height=720'
-        if is_image_url(link):
-            break
-    if not is_image_url(link):
-        return False
-    else:
-        return requests.get(link).content
+        if (await is_image_url(link)):
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(link, ssl=False) as r:
+                    return (await r.read())
+    return False
 
-def upload_image(link):
+def upload_image(link: str):
     link=urllib.parse.quote_plus(link)
-    for i in range(3):
-        url=f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
-        if is_image_url(url):
-            return url
-    return "Unable to access URL"
+    return f"https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/output=format:png/{link}"
     
-def nekos_life_getlink(link):
+async def nekos_life_getlink(link):
     link="https://render-tron.appspot.com/render/"+link
     while True:
         try:
-            r=requests.get(link).text
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(link, ssl=False) as resp:
+                    r=await resp.text()
             soup=bs4(r, "html.parser")
             f=soup.find("pre")
             f=json.loads(f.text)
@@ -212,31 +179,37 @@ def nekos_life_getlink(link):
                 break
         except Exception:
             pass
-    return f['url']
+    return str(f['url'])
 
-def changemymind_gen(text):
+async def changemymind_gen(text):
     endpoint=neko_base+"changemymind&text="+urllib.parse.quote_plus(text)
-    res=(requests.get(endpoint).json()["message"])
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(endpoint, ssl=False) as resp:
+            res=await resp.json()
+    res=res["message"]
     return res
     
-def phcomment_gen(name, img, text):
+async def phcomment_gen(name, img, text):
     endpoint=neko_base+"phcomment&username="+urllib.parse.quote_plus(name)+"&image="+img+"&text="+urllib.parse.quote_plus(text)
-    res=(requests.get(endpoint).json()["message"])
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(endpoint,ssl=False) as resp:
+            res=await resp.json()
+    res=res["message"]
     return res
 
-def short_link(link):
+async def short_link(link):
     base="https://owo.vc/generate"
     if not link.lower().startswith("https://") and not link.lower().startswith("http://"):
         linkr="https://"+link
-        if checklink(linkr):
+        if (await checklink(linkr)):
             link=linkr
         else:
                 linkr="http://"+link
-                if checklink(linkr):
+                if (await checklink(linkr)):
                     link=linkr
                 else:
                     return "Invalid URL"
-    if not checklink(link):
+    if not (await checklink(link)):
         return "Invalid URL"
         
     else:
@@ -244,21 +217,22 @@ def short_link(link):
               "generator": "zws",
               "preventScrape": True,
               "owoify": True}
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.post(base, json=json,ssl=False) as resp:
+                if resp.status==200:
+                    res=await resp.json()
+                    result=res['result']
+                    result="https://"+result
+                    result=f'<{result}>'
+                    return result
+                else:
+                    return "Some error occured"
 
-        r=requests.post(base, json=json)
-        res=r.json()
-        if r.status_code==200:
-            result=res['result']
-            result="https://"+result
-            result=f'<{result}>'
-            return result
-        else:
-            return "Some error occured"
-
-def gender_info(name):
+async def gender_info(name):
     base="https://api.genderize.io/?name="
-    r=requests.get(base+name.strip())
-    res=r.json()
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(base+name.strip(),ssl=False) as resp:
+            res=await resp.json()
     prob=0
     if res['probability'] < 0.50:
         if not res['probability']==0:
@@ -273,24 +247,29 @@ def gender_info(name):
         result=f"No match found for '{res['name'].title()}'"
     return result
 
-def patpat(url):
-    a=0
+async def patpat(url):
     endpoint="https://api.jeyy.xyz/image/patpat?image_url="+url
     for i in range(3):
-        if is_image_url(endpoint):
+        if (await is_image_url(endpoint)):
             return endpoint
     return False
 
-def trash_gen(url):
+async def trash_gen(url):
     endpoint=neko_base+"trash&url="+url
-    res=(requests.get(endpoint).json()["message"])
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(endpoint,ssl=False) as resp:
+            res=await resp.json()
+    res=res["message"]
     return res
     
-def stickbug_vid(url, link):
+async def stickbug_vid(url):
     endpoint=neko_base+"stickbug&url="+str(url)
-    link[0]=(requests.get(endpoint).json()["message"])
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(endpoint,ssl=False) as resp:
+            res=await resp.json()
+    return res["message"]
  
-def neko_pic():
+async def neko_pic():
     ch=random.choice([1, 2, 3])
     if ch==3:
         endpoint="https://nekos.best/api/v1/nekos"
@@ -298,65 +277,76 @@ def neko_pic():
         endpoint="https://neko-love.xyz/api/v1/neko"
     else:
         endpoint="https://nekos.life/api/v2/img/neko"
-    return upload_image(nekos_life_getlink(endpoint))
+    link=await nekos_life_getlink(endpoint)
+    try:
+        link=upload_image(link)
+    except Exception:
+        pass
+    return link
         
-def lewdkemo_gen():
+async def lewdkemo_gen():
     endpoint="https://nekos.life/api/v2/img/lewdkemo"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
     
-def lewdholo_gen():
+async def lewdholo_gen():
     endpoint="https://nekos.life/api/v2/img/hololewd"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
 
-def fox_girl_gen():
+async def fox_girl_gen():
     endpoint="https://nekos.life/api/v2/img/fox_girl"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
 
-def kemonomimi_gen():
+async def kemonomimi_gen():
     endpoint="https://nekos.life/api/v2/img/kemonomimi"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
     
-def cum_gen():
+async def cum_gen():
     endpoint="https://nekos.life/api/v2/img/cum_jpg"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
     
-def bj_gen():
+async def bj_gen():
     endpoint="https://nekos.life/api/v2/img/blowjob"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
     
-def femdom_gen():
+async def femdom_gen():
     endpoint="https://nekos.life/api/v2/img/femdom"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
     
-def lewd_gen():
+async def lewd_gen():
     endpoint="https://nekos.life/api/v2/img/lewd"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
     
-def pussy_gen():
+async def pussy_gen():
     endpoint="https://nekos.life/api/v2/img/pussy_jpg"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
     
-def boobs_gen():
+async def boobs_gen():
     endpoint="https://nekos.life/api/v2/img/tits"
-    return upload_image(nekos_life_getlink(endpoint))
+    return (upload_image(await nekos_life_getlink(endpoint)))
 
 def rand_list(list):
     return random.choice(list)
 
-def get_image_bytes(url):
-    if is_image_url(url):
-        b=io.BytesIO(requests.get(url).content)
+async def get_image_bytes(url):
+    if (await is_image_url(url)):
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                dat=await resp.read()
+        b=io.BytesIO(dat)
         return b
         
-def lewdneko_gen():
+async def lewdneko_gen():
     ch=random.choice([1, 2])
     if ch==1:
         endpoint="https://neko-love.xyz/api/v1/nekolewd"
-        r=requests.get(endpoint).json()['url']
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(endpoint,ssl=False) as resp:
+                res=await resp.json()
+        r=res['url']
         return r
     else:
         endpoint="https://nekos.life/api/lewd/neko"
-        return upload_image(nekos_life_getlink(endpoint))
+        return (upload_image(await nekos_life_getlink(endpoint)))
         
 @tasks.loop(minutes=5)
 async def change_activity():
@@ -494,11 +484,14 @@ async def pat(ctx, user:discord.Member=None):
     if user is None:
         user=ctx.author
     avatar=user.avatar_url_as(format='png')
-    patpat_gif=patpat(str(avatar))
+    patpat_gif=await patpat(str(avatar))
     if patpat_gif is False:
         await ctx.channel.send("Cannot process that user's avatar", delete_after=2.0)
         return
-    img=get_image_bytes(patpat_gif)
+    async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(patpat_gif,ssl=False) as resp:
+                file=await resp.read()
+                img=io.BytesIO(file)
     try:
         await ctx.channel.send(file=discord.File(img, 'Blank_pat.gif'))
     except Exception:
@@ -525,10 +518,13 @@ async def kannagen(ctx, *, text:str):
         await ctx.message.delete()
     except Exception:
         pass
-    url=kannagen_gen(text)
+    url=await kannagen_gen(text)
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, 'blank_kanna.png'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                dat=await resp.read()
+        file=io.BytesIO(dat)
+        await ctx.channel.send(file=discord.File(file, 'Blank_kannagen.png'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -541,13 +537,13 @@ async def webshot(ctx, link:str=None):
             await ctx.message.delete()
         except Exception:
             pass
-        res=scrnshot(link)
+        res=await scrnshot(link)
         if res is False:
             await ctx.channel.send("Unable to access URL", delete_after=2.0)
         else:
             try:
                 file=io.BytesIO(res)
-                await ctx.channel.send(file=discord.File(file, 'blank_screenshot.png'))
+                await ctx.channel.send(file=discord.File(file, 'Blank_screenshot.png'))
             except Exception:
                 r=upload_image(res)
                 await ctx.channel.send(r)
@@ -558,10 +554,13 @@ async def changemymind(ctx, *, text:str):
         await ctx.message.delete()
     except Exception:
         pass
-    url=changemymind_gen(text)
+    url=await changemymind_gen(text)
     try:
-        file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'blank_cmm.png'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                dat=await resp.read()
+        file=io.BytesIO(dat)
+        await ctx.channel.send(file=discord.File(file, 'Blank_cmm.png'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -581,11 +580,13 @@ async def chatbot(ctx, *, message: str=None):
         await ctx.channel.send('```\nBlankbot: Hello I am BlankBot, please chat with me :)```')
         return
     bot=f"https://api.popcat.xyz/chatbot?msg={urllib.parse.quote_plus(message)}&owner=Blank&botname=Blankbot"
-    r=requests.get(bot)
-    if r.status_code==200:
-        await ctx.channel.send(f"{message}\n\n```\nBlankbot: {r.json()['responose'].strip()}```")
-    else:
-        await ctx.channel.send("Chatbot not working right now!", delete_after=2.0)
+    async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(bot,ssl=False) as resp:
+                if resp.status==200:
+                    resp=await resp.json()
+                    await ctx.channel.send(f"{message}\n\n```\nBlankbot: {resp['response'].strip()}```")
+                else:
+                    await ctx.channel.send("Chatbot not working right now!", delete_after=2.0)
 
 @Blank.command()
 async def clown(ctx, user: discord.Member=None):
@@ -595,13 +596,24 @@ async def clown(ctx, user: discord.Member=None):
         pass
     if user is None:
         user=ctx.author
-    endpoint="https://api.popcat.xyz/clown?image="+str(user.avatar_url_as(format='png'))
-    if is_image_url(endpoint):
+    url=upload_image(str(user.avatar_url_as(format='png')))
+    endpoint="https://api.popcat.xyz/clown?image="+url
+    try:
+        image=await is_image_url(endpoint)
+    except Exception:
+        await ctx.channel.send("The API is currently down!", delete_after=2.0)
+        return
+    if image:
         try:
-            img=get_image_bytes(endpoint)
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(endpoint,ssl=False) as resp:
+                    file=await resp.read()
+                    img=io.BytesIO(file)
             await ctx.channel.send(file=discord.File(img, 'Blank_clown.png'))
         except Exception:
             await ctx.channel.send(upload_image(endpoint))
+    else:
+        print(image)
 
 @Blank.command()
 async def lewdneko(ctx):
@@ -609,11 +621,14 @@ async def lewdneko(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=lewdneko_gen()
+    url=await lewdneko_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdneko.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_lewdneko.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -623,11 +638,14 @@ async def lewdkemo(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=lewdkemo_gen()
+    url=await lewdkemo_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdkemo.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_lewdkemo.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -637,11 +655,14 @@ async def lewdholo(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=lewdholo_gen()
+    url=await lewdholo_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewdholo.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_lewdholo.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -654,11 +675,14 @@ async def gaypride(ctx, user: discord.Member=None):
     if user is None:
         user=ctx.author
     link=str(user.avatar_url_as(format='png'))
-    file=discord.File(io.BytesIO(requests.get(gae(link)).content), 'Blank_gaypride.png')
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(await gae(link),ssl=False) as resp:
+            dat=await resp.read()
+    file=discord.File(io.BytesIO(dat), 'Blank_gaypride.png')
     try:
         await ctx.channel.send(file=file)
     except Exception:
-        await ctx.channel.send(upload_image(gae(link)))
+        await ctx.channel.send(upload_image(await gae(link)))
     
 @Blank.command(aliases=['inv'])
 async def invert(ctx, user: typing.Union[discord.Member, str]=None):
@@ -672,12 +696,12 @@ async def invert(ctx, user: typing.Union[discord.Member, str]=None):
         user=user.replace("<", "")
         user.replace(">", "")
         user=user.strip()
-        if not checklink(user):
-            await ctx.channel.send('Invalid image URL')
+        if not (await checklink(user)):
+            await ctx.channel.send('Invalid image URL', delete_after=2.0)
             return
         else:
-            if not is_image_url(user):
-                await ctx.channel.send('Invalid image URL')
+            if not (await is_image_url(user)):
+                await ctx.channel.send('Invalid image URL', delete_after=2.0)
                 return
         if "?" in user:
             link=user.split("?", 1)
@@ -690,7 +714,10 @@ async def invert(ctx, user: typing.Union[discord.Member, str]=None):
     else:
         user=str(user.avatar_url_as(format='png'))
     try:
-        file=discord.File(io.BytesIO(requests.get(invrt(user)).content), 'Blank_invert.png')
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(await invrt(user),ssl=False) as resp:
+                dat=await resp.read()
+        file=discord.File(io.BytesIO(dat), 'Blank_invert.png')
         await ctx.channel.send(file=file)
     except Exception:
         await ctx.channel.send(upload_image(invrt(user)))
@@ -703,9 +730,12 @@ async def jail(ctx, user: discord.Member=None):
         pass
     if user is None:
         user=ctx.author
-    link=jale(str(user.avatar_url_as(format='png')))
+    link=await jale(str(user.avatar_url_as(format='png')))
     try:
-        file=discord.File(io.BytesIO(requests.get(link).content), 'Blank_jail.png')
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(link,ssl=False) as resp:
+                dat=await resp.read()
+        file=discord.File(io.BytesIO(dat), 'Blank_jail.png')
         await ctx.channel.send(file=file)
     except Exception:
         await ctx.channel.send(upload_image(link))
@@ -718,9 +748,12 @@ async def wasted(ctx, user: discord.Member=None):
         pass
     if user is None:
         user=ctx.author
-    link=waste(str(user.avatar_url_as(format='png')))
+    link=await waste(str(user.avatar_url_as(format='png')))
     try:
-        file=discord.File(io.BytesIO(requests.get(link).content), 'Blank_wasted.png')
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(link,ssl=False) as resp:
+                dat=await resp.read()
+        file=discord.File(io.BytesIO(dat), 'Blank_wasted.png')
         await ctx.channel.send(file=file)
     except Exception:
         await ctx.channel.send(upload_image(link))
@@ -733,9 +766,12 @@ async def wanted(ctx, user: discord.Member=None):
         pass
     if user is None:
         user=ctx.author
-    link=want(str(user.avatar_url_as(format='png')))
+    link=await want(str(user.avatar_url_as(format='png')))
     try:
-        file=discord.File(io.BytesIO(requests.get(link).content), 'Blank_wanted.png')
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(link,ssl=False) as resp:
+                dat=await resp.read()
+        file=discord.File(io.BytesIO(dat), 'Blank_wanted.png')
         await ctx.channel.send(file=file)
     except Exception:
         await ctx.channel.send(upload_image(link))
@@ -748,39 +784,49 @@ async def scroll(ctx, *, text=None):
         pass
     if text is None:
         text="I forgot to write something here"
-    link=scrolll(text)
+    link=await scrolll(text)
     try:
-        file=discord.File(io.BytesIO(requests.get(link).content), 'blank_scroll.png')
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(link,ssl=False) as resp:
+                dat=await resp.read()
+        file=discord.File(io.BytesIO(dat), 'Blank_scroll.png')
         await ctx.channel.send(file=file)
     except Exception:
         await ctx.channel.send(upload_image(link))
 
-@Blank.command()
+@Blank.command(aliases=['kitsune', 'fox'])
 async def foxgirl(ctx):
     try:
         await ctx.message.delete()
     except Exception:
         pass
-    url=fox_girl_gen()
+    url=await fox_girl_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_foxgirl.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_foxgirl.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
-@Blank.command()
+@Blank.command(aliases=['kemo'])
 async def kemonomimi(ctx):
     try:
         await ctx.message.delete()
     except Exception:
         pass
-    url=kemonomimi_gen()
+    url=await kemonomimi_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_kemonomimi.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_kemonomimi.{extent}'))
     except Exception:
+        pass
         await ctx.channel.send(url)
         
 @Blank.command()
@@ -789,11 +835,14 @@ async def lewd(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=lewd_gen()
+    url=await lewd_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_lewd.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_lewd.{extent}'))
     except Exception:
         await ctx.channel.send(url)
         
@@ -803,12 +852,16 @@ async def femdom(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=femdom_gen()
+    url=await femdom_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_femdom.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_femdom.{extent}'))
     except Exception:
+        pass
         await ctx.channel.send(url)
 
 @Blank.command()
@@ -817,11 +870,14 @@ async def cum(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=cum_gen()
+    url=await cum_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_cum.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_cum.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -831,11 +887,14 @@ async def blowjob(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=bj_gen()
+    url=await bj_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_blowjob.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_blowjob.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -845,11 +904,14 @@ async def pussy(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=pussy_gen()
+    url=await pussy_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_pussy.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_pussy.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -859,11 +921,14 @@ async def boobs(ctx):
         await ctx.message.delete()
     except Exception:
         pass
-    url=boobs_gen()
+    url=await boobs_gen()
     extent=url.rsplit(".", 1)[1]
     try:
-        file=get_image_bytes(url)
-        await ctx.channel.send(file=discord.File(file, f'blank_boobs.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                file=await resp.read()
+                file=io.BytesIO(file)
+        await ctx.channel.send(file=discord.File(file, f'Blank_boobs.{extent}'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -879,7 +944,7 @@ async def shorten(ctx, text=None):
         if "<" in text or ">" in text:
             text=text.replace(">","")
             text=text.replace("<","")
-        await ctx.channel.send(short_link(text))
+        await ctx.channel.send(await short_link(text))
 
 @Blank.command(aliases=["phc"])
 async def phcomment(ctx, user: typing.Union[discord.Member, str]=None, *, text=None):
@@ -896,10 +961,13 @@ async def phcomment(ctx, user: typing.Union[discord.Member, str]=None, *, text=N
         user=ctx.message.author
     name=user.display_name
     image=str(user.avatar_url_as(format="png"))
-    url=phcomment_gen(name, image, text)
+    url=await phcomment_gen(name, image, text)
     try:
-        file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'blank_ph.png'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                dat=await resp.read()
+        file=io.BytesIO(dat)
+        await ctx.channel.send(file=discord.File(file, 'Blank_ph.png'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -924,12 +992,15 @@ async def emoji(ctx, emoji=None):
                             url=str(emoji.url_as(format='gif'))
                         else:
                             url=str(emoji.url_as(format='png'))
-                        file=io.BytesIO(requests.get(url).content)
+                            async with aiohttp.ClientSession(headers=headers) as session:
+                                async with session.get(url,ssl=False) as resp:
+                                    dat=await resp.read()
+                        file=io.BytesIO(dat)
                         try:
                             if ".gif" in url:
-                                await ctx.channel.send(file=discord.File(file, f'blank_{emoji.name}.gif'))
+                                await ctx.channel.send(file=discord.File(file, f'Blank_{emoji.name}.gif'))
                             else:
-                                await ctx.channel.send(file=discord.File(file, f'blank_{emoji.name}.png'))
+                                await ctx.channel.send(file=discord.File(file, f'Blank_{emoji.name}.png'))
                         except Exception:
                             await ctx.channel.send(url)
 
@@ -1012,14 +1083,18 @@ async def neko(ctx):
             pass
     for i in range(3):
         try:
-            url=neko_pic()
+            url=await neko_pic()
             extent=url.rsplit(".", 1)[1]
             break
         except Exception:
-            pass
+            await ctx.channel.send(url)
+            return
     try:
-        file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, f'blank_neko.{extent}'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                dat=await resp.read()
+        img=io.BytesIO(dat)
+        await ctx.channel.send(file=discord.File(img, f'Blank_neko.{extent}'))
     except Exception:
         await ctx.channel.send(url)
         
@@ -1031,10 +1106,13 @@ async def trash(ctx, user:discord.Member=None):
             pass
     if user is None:
         user=ctx.message.author
-    url=trash_gen(str(user.avatar_url_as(format="png")))
+    url=await trash_gen(str(user.avatar_url_as(format="png")))
     try:
-        file=io.BytesIO(requests.get(url).content)
-        await ctx.channel.send(file=discord.File(file, 'blank_trash.png'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                dat=await resp.read()
+        file=io.BytesIO(dat)
+        await ctx.channel.send(file=discord.File(file, 'Blank_trash.png'))
     except Exception:
         await ctx.channel.send(url)
     
@@ -1046,19 +1124,19 @@ async def stickbug(ctx, user: discord.Member=None):
         pass
     if user is None:
         user=ctx.message.author
-    url=[None]
-    t1=Thread(target=stickbug_vid, args=((user.avatar_url_as(format="png"), url)))
-    t1.start()
-    m=await ctx.channel.send("It will take a little bit of time")
-    time.sleep(2)
+    await ctx.channel.send('It might take a few seconds', delete_after=2.0)
+    url=await stickbug_vid(str(user.avatar_url_as(format="png")))
+    m=await ctx.channel.send("It will take a little bit of time", delete_after=2.0)
     try:
         await m.delete()
     except Exception:
         pass
-    t1.join()
     try:
-        file=io.BytesIO(requests.get(url[0]).content)
-        await ctx.channel.send(file=discord.File(file, 'blank_stickbug.mp4'))
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url,ssl=False) as resp:
+                dat=await resp.read()
+        file=io.BytesIO(dat)
+        await ctx.channel.send(file=discord.File(file, 'Blank_stickbug.mp4'))
     except Exception:
         await ctx.channel.send(url)
 
@@ -1137,15 +1215,21 @@ async def av(ctx, user:discord.Member=None):
         await ctx.channel.send("User does not has any avatar")
     else:
         if user.is_avatar_animated():
-            avatar=io.BytesIO(requests.get(user.avatar_url_as(format='gif')).content)
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(str(user.avatar_url_as(format='gif')),ssl=False) as resp:
+                    dat=await resp.read()
+            avatar=io.BytesIO(dat)
             try:
-                await ctx.channel.send(file=discord.File(avatar, 'blank_avatar.gif'))
+                await ctx.channel.send(file=discord.File(avatar, 'Blank_avatar.gif'))
             except Exception:
                 await ctx.channel.send(str(user.avatar_url_as(format='gif')))
         else:
-            avatar=io.BytesIO(requests.get(user.avatar_url_as(format='png')).content)
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(str(user.avatar_url_as(format='png')),ssl=False) as resp:
+                    dat=await resp.read()
+            avatar=io.BytesIO(dat)
             try:
-                await ctx.channel.send(file=discord.File(avatar, 'blank_avatar.png'))
+                await ctx.channel.send(file=discord.File(avatar, 'Blank_avatar.png'))
             except Exception:
                 await ctx.channel.send(str(user.avatar_url_as(format="png")))
     
@@ -1169,7 +1253,10 @@ async def copy(ctx):
                     if isinstance(chann, discord.TextChannel):
                         await x.create_text_channel(f"{chann}", nsfw=chann.is_nsfw(), topic=chann.topic, slowmode_delay=chann.slowmode_delay, position=chann.position)
             for roles in ctx.guild.roles:
-                await g.create_role(name=roles.name, colour=roles.colour, permissions=roles.permissions, mentionable=roles.mentionable, hoist=roles.hoist)
+                if not roles.name=="@everyone":
+                    await g.create_role(name=roles.name, colour=roles.colour, permissions=roles.permissions, mentionable=roles.mentionable, hoist=roles.hoist)
+                else:
+                    await g.default_role.edit(colour=roles.colour, permissions=roles.permissions, mentionable=roles.mentionable, hoist=roles.hoist)
             
             for chann in ctx.guild.channels:
                     if isinstance(chann, discord.CategoryChannel):
@@ -1182,9 +1269,13 @@ async def copy(ctx):
                             await g.create_text_channel(f"{chann}", nsfw=chann.is_nsfw(), topic=chann.topic, slowmode_delay=chann.slowmode_delay, position=chann.position)
                     else:
                         pass
-                            
+                           
     try:
-        await g.edit(icon=requests.get(ctx.guild.icon_url).content)
+        guild_icon=ctx.guild.icon_url
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(str(guild_icon),ssl=False) as resp:
+                dat=await resp.read()
+        await g.edit(icon=dat)
     except Exception:
         pass
         
@@ -1211,7 +1302,9 @@ async def ascii(ctx, *, text=None):
             await ctx.message.delete()
     except Exception:
             pass
-    r = requests.get(f'http://artii.herokuapp.com/make?text={urllib.parse.quote_plus(text)}').text
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(f'http://artii.herokuapp.com/make?text={urllib.parse.quote_plus(text)}',ssl=False) as resp:
+            r=await resp.text()
     if len('```\n' + r + '```') > 2000:
         return
     await ctx.send(f"```\n{r}```")
@@ -1237,7 +1330,7 @@ async def embed(ctx, image_url=None, *, description=None):
         else:
             image_url=image_url.replace("<","")
             image_url=image_url.replace(">","")
-            working=is_image_url(image_url)
+            working=await is_image_url(image_url)
             if working==False:
                 if not description is None:
                     description=f"{image_url} {description}"
@@ -1251,7 +1344,7 @@ async def embed(ctx, image_url=None, *, description=None):
             embed.set_image(url=image_url)
         try:
             await ctx.channel.send(embed=embed)
-        except Exception as e:
+        except Exception:
             await ctx.channel.send("I don't have permission to send embeds in this channel", delete_after=2.0)
 
 @Blank.command(aliases=["distort"])
@@ -1264,23 +1357,29 @@ async def magik(ctx, user: discord.Member = None):
     if user is None:
         avatar = str(ctx.message.author.avatar_url_as(format="png"))
         endpoint += avatar
-        r = requests.get(endpoint)
-        res = r.json()
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(endpoint,ssl=False) as resp:
+                res=await resp.json()
         try:
-            image=requests.get(res['message']).content
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(res['message'],ssl=False) as resp:
+                    image=await resp.read()
             with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, "blank_magik.png"))
+                await ctx.send(file=discord.File(file, "Blank_magik.png"))
         except Exception:
             await ctx.send(res['message'])
     else:
         avatar = str(user.avatar_url_as(format="png"))
         endpoint += avatar
-        r = requests.get(endpoint)
-        res = r.json()
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(endpoint,ssl=False) as resp:
+                res=await resp.json()
         try:
-            image=requests.get(res['message']).content
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(res['message'],ssl=False) as resp:
+                    image=await resp.read()
             with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, "blank_magik.png"))
+                await ctx.send(file=discord.File(file, "Blank_magik.png"))
         except Exception:
             await ctx.send(res['message'])
 
@@ -1294,23 +1393,29 @@ async def deepfry(ctx, user: discord.Member = None):
     if user is None:
         avatar = str(ctx.message.author.avatar_url_as(format="png"))
         endpoint += avatar
-        r = requests.get(endpoint)
-        res = r.json()
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(endpoint,ssl=False) as resp:
+                res=await resp.json()
         try:
-            image=requests.get(res['message']).content
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(res['message'],ssl=False) as resp:
+                    image=await resp.read()
             with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, "blank_deep_fry.png"))
+                await ctx.send(file=discord.File(file, "Blank_deep_fry.png"))
         except:
             await ctx.send(res['message'])
     else:
         avatar = str(user.avatar_url_as(format="png"))
         endpoint += avatar
-        r = requests.get(endpoint)
-        res = r.json()
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(endpoint,ssl=False) as resp:
+                res=await resp.json()
         try:
-            image=requests.get(res['message']).content
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(res['message'],ssl=False) as resp:
+                    image=await resp.read()
             with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, "blank_deep_fry.png"))
+                await ctx.send(file=discord.File(file, "Blank_deep_fry.png"))
         except:
             await ctx.send(res['message'])
  
@@ -1330,7 +1435,9 @@ async def wyr(ctx):
             await ctx.message.delete()
     except Exception:
             pass
-    r = requests.get('https://www.conversationstarters.com/wyrqlist.php').text
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get('https://www.conversationstarters.com/wyrqlist.php',ssl=False) as resp:
+            r=await resp.text()
     soup = bs4(r, 'html.parser')
     qa = soup.find(id='qa').text
     qb = soup.find(id='qb').text
@@ -1341,10 +1448,12 @@ async def wyr(ctx):
 @Blank.command()
 async def topic(ctx): 
     try:
-            await ctx.message.delete()
+        await ctx.message.delete()
     except Exception:
-            pass
-    r = requests.get('https://www.conversationstarters.com/generator.php').content
+        pass
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get('https://www.conversationstarters.com/generator.php',ssl=False) as resp:
+            r=await resp.text()
     soup = bs4(r, 'html.parser')
     topic = soup.find(id="random").text
     await ctx.send("```\n"+topic+"```")            
@@ -1359,7 +1468,10 @@ async def geoip(ctx, *, ipaddr: str=None):
         await ctx.channel.send("You have to enter IP address too")
     else:
         await ctx.message.delete()
-        temp = requests.get(f'http://ip-api.com/json/{ipaddr}?fields=26961913').text.replace('""', '"(No info)"')
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(f'http://ip-api.com/json/{ipaddr}?fields=26961913', ssl=False) as resp:
+                temp=await resp.text()
+        temp=temp.replace('""', '"(No info)"')
         geo=json.loads(temp)
     
         if geo['status']=='success':
@@ -1394,7 +1506,10 @@ async def gender(ctx, name: str=None):
             await ctx.message.delete()
         except Exception:
             pass
-        await ctx.channel.send(gender_info(name))
+        await ctx.channel.send(await gender_info(name))
+
+async def anime_info(anime: str):
+    return Anime(anime)
 
 @Blank.command()
 async def anime(ctx, *, anime: str=None):
@@ -1404,7 +1519,7 @@ async def anime(ctx, *, anime: str=None):
             await ctx.message.delete()
     except Exception:
             pass
-    anime=Anime(anime)
+    anime=await anime_info(anime)
     aurl=anime.url
     animetitle=anime.title_english
     adesc=anime.description.replace("[Written by MAL Rewrite]", "")
