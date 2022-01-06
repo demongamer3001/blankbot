@@ -94,7 +94,7 @@ async def gae(link):
     return cool_img_base+'gay?image='+link
 
 async def invrt(link):
-    return cool_img_base+'invert?image='+link.strip()
+    return "https://api.popcat.xyz/"+'invert?image='+link.strip()
     
 async def jale(link):
     return cool_img_base+'jail?image='+link.strip()
