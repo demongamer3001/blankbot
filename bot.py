@@ -1,5 +1,4 @@
 import os
-import requests
 import base64
 from termcolor import colored
 from datetime import datetime
@@ -8,11 +7,23 @@ import io
 import random
 import typing
 import urllib.parse
-from bs4 import BeautifulSoup as bs4
+try:
+    from bs4 import BeautifulSoup as bs4
+except Exception:
+    os.system('pip install bs4==0.0.1')
+    from bs4 import BeautifulSoup as bs4
 import aiohttp
-import discord
+try:
+    import discord
+except Exception:
+    os.system('pip install discord.py==1.7.3')
+    import discord
 from discord.ext import commands, tasks
-from animec import Anime
+try:
+    from animec import Anime
+except Exception:
+    os.system('pip install animec')
+    from animec import Anime
 import json
 from flask import Flask
 from threading import Thread
