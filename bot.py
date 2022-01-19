@@ -402,7 +402,7 @@ async def help(ctx, category=None):
         if category==None:
             embed = discord.Embed(title = "BlankBot", url="https://replit.com/@BlankMCPE/Blank-Bot", color=discord.Colour.random(), description=f"""Use `{prefix}help <category>` for more info on a category.""")
             embed.add_field(name="\uD83E\uDDCA Bot",
-value="`help embed purge del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
+value="`help embed del copy shorten webshot ip whois stream play watch listen random_status`", inline=False)
             embed.add_field(name="\uD83E\uDDCA Fun",
 value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime invert jail clown wanted wasted gaypride pat scroll phcomment chatbot kannagen changemymind trash ascii stickbug wyr topic roll gender empty`", inline=False)
             embed.add_field(name="\uD83E\uDDCA NSFW", value="`lewdneko lewdkemo lewd blowjob femdom lewdholo cum boobs pussy`", inline=False)
@@ -418,7 +418,6 @@ value="`avatar magik emoji deepfry neko foxgirl kemonomimi anime invert jail clo
                 embed.set_image(url="https://i.imgur.com/Es8KoaC.jpeg")
                 embed.add_field(name=f"{prefix}help [category]", value="`Shows help menu. (If category is given, then shows help menu for the category)`", inline=False)
                 embed.add_field(name=f"{prefix}embed [Image url] <text>", value="`Send embed like a bot`", inline=False)
-                embed.add_field(name=f"{prefix}purge <number of messages>", value="`Deletes the given number of messages sent by you (do not put large number or you will get rate limited)`", inline=False)
                 embed.add_field(name=f"{prefix}del <text>", value="`Send a message and instantly deletes it (do not use this very frequently or you will get rate limited)`", inline=False)
                 embed.add_field(name=f"{prefix}copy", value="`Copy the current server (do not make changes to the new server until the server icon is copied)`", inline=False)
                 embed.add_field(name=f"{prefix}shorten <link>", value="`Shorten your link`", inline=False)
@@ -1289,21 +1288,6 @@ async def copy(ctx):
         await g.edit(icon=dat)
     except Exception:
         pass
-        
-@Blank.command()
-async def purge(ctx, amount: int=None):
-    if amount is None:
-        return
-    try:
-            await ctx.message.delete()
-    except Exception:
-            pass
-    async for message in ctx.message.channel.history(limit=amount).filter(lambda m: m.author == Blank.user).map(
-            lambda m: m):
-        try:
-            await message.delete()
-        except:
-            pass
 
 @Blank.command(aliases=["fancy"])
 async def ascii(ctx, *, text=None):
